@@ -7,6 +7,9 @@ install:
 start:
 	gunicorn task_manager.wsgi
 
+new_app:
+	#django-admin startapp app_name
+
 # тесты
 test:
 	python3 manage.py test
