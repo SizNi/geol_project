@@ -6,26 +6,31 @@ width, height = 2480, 3508
 # коэффициент пересчета мм -> % от общей ширины/высоты (2480/210 = 11,809 (1 мм в пикселях))
 # 2480/100 = 24,8 пикселя в 1%, соответственно 1 мм = 11,809/24,8 = 0,4761% (по y)
 # 3508/100 = 35,08 пикселя в 1%, соответственно 1 мм = 11,809/35,08 = 0,3366% (по x)
-# общая высота рисунка - 270 мм
+# общая высота рисунка (самой скважины) - 250 мм, названий столбцов - 25 мм
 mm_x = 0.004761
 mm_y = 0.003366
 koef = 2480/210
-line = 0.001
-
+# шаблон данных для слоев
+data = {
+    1:{'id': 1, 'name':'Q', 'thick': 45.0, 'sediments': 'Глина серая, желтая'},
+    2:{'id': 2, 'name':'J3', 'thick': 10, 'sediments': 'Песок мелко-среднезернистый'},
+    3:{'id': 3, 'name':'J3ox-c', 'thick': 15, 'sediments': 'Глина'},
+    4:{'id': 4, 'name':'C3g-P1a', 'thick': 25, 'sediments': 'Известняк'},
+    }
 
 def main():
     d = draw.Drawing(width, height, origin=(0, 0), displayInline=False)
     # Подложка
-    r_0 = draw.Rectangle(0, 0, 210*koef, 297*koef,
-                         fill='white', stroke='black')
-    d.append(r_0)
+    r = draw.Rectangle(0, 0, 210*koef, 297*koef,
+                       fill='white', stroke='black')
+    d.append(r)
     header(d)
-    scale(d, 48)
+    scale(d, 95)
+    layers(d, 95, data)
     d.savePng('example.png')
 
-# Создание наименований таблицы
 
-
+# Создание таблицы с наименованием столбцов
 def header(d):
     # d x1, y1, x2, y2
     # создание заголовка таблицы (надо немного поправить перенос строк, для таблицы
@@ -77,8 +82,14 @@ def scale(d, well_depth):
 
 # создание прямоугольника с текстом
 def rectangle(d, x, y, x1, y1, text, direction):
-    r = draw.Rectangle(x*koef, y*koef, x1*koef, y1*koef,
-                       fill='white', stroke='black')
+    # f - заливать, h - с горизонтальным текстом, v - вертикальным
+    # заготовка для добавления заливки
+    if direction == 'f':
+        r = draw.Rectangle(x*koef, y*koef, x1*koef, y1*koef,
+                        fill='blue', stroke='black')
+    else:
+        r = draw.Rectangle(x*koef, y*koef, x1*koef, y1*koef,
+                        fill='white', stroke='black')
     d.append(r)
     # создание переноса строки если надо
     if len(text) <= x1 / 2.1 or direction == 'v':
@@ -94,8 +105,8 @@ def rectangle(d, x, y, x1, y1, text, direction):
                            close=False,
                            stroke='white')
         d.append(draw.Text([text], 40, path=p, text_anchor='middle'))
-    else:
-        number_str = math.ceil(abs((len(text)*2.1)/y1))
+    elif direction == 'h':
+        number_str = math.ceil(abs((len(text)*2.1)/x1))
         i = 0
         # Первоначальное положение строки
         step = y1 / number_str
@@ -124,6 +135,46 @@ def rectangle(d, x, y, x1, y1, text, direction):
                        stroke='white')
         d.append(draw.Text([text[text_start_step:]],
                  40, path=p, text_anchor='middle'))
+
+# создание слоя
+def layers(d, well_depth, data):
+    # выбираем масштаб
+    if well_depth <= 50:
+        section = 5
+    elif well_depth > 50 and well_depth <= 150:
+        section = 10
+    else:
+        section = 20
+    # у нас на 250 мм на листе а4 растянута полная глубина скважин с округлением
+    section_numbers = round((well_depth + (section/2))/section)
+    # смещение по x: (12, 12, 12, 30, 30, 15, 15, 12, 22.5, 22.5)
+    # деля 250 на округленную глубину скважины - получаем сколько в мм метров
+    scale_m = (250/(section_numbers * section))
+    # стартовые положения. Тут будет начало цикла
+    h_start = 0.0
+    x_start = 10 + 12
+    y_start = (297 - 15 - 25 - data[1]['thick']*scale_m)
+    rectangle(d, x_start, y_start, 12, data[1]['thick']*scale_m, str(data[1]['id']), 'h')
+    x_start += 12
+    rectangle(d, x_start, y_start, 12, data[1]['thick']*scale_m, data[1]['name'], 'h')
+    x_start += 12
+    rectangle(d, x_start, y_start, 30, data[1]['thick']*scale_m, data[1]['sediments'], 'h')
+    x_start += 30
+    rectangle(d, x_start, y_start, 30, data[1]['thick']*scale_m, 'Здесь будет ссылка на заливку', 'f')
+    x_start += 30
+    # подумать как убрать подписи вниз (к низу прямоугольника)
+    rectangle(d, x_start, y_start, 15, data[1]['thick']*scale_m, str(h_start), 'h')
+    x_start += 15
+    h_start += data[1]['thick']
+    rectangle(d, x_start, y_start, 15, data[1]['thick']*scale_m, str(h_start), 'h')
+    x_start += 15
+    rectangle(d, x_start, y_start, 15, data[1]['thick']*scale_m, str(data[1]['thick']), 'h')
+    # завершение цикла отрисовки геологии
+
+
+
+
+
 
 
 if __name__ == "__main__":
