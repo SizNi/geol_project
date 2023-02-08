@@ -13,9 +13,9 @@ koef = 2480/210
 # шаблон данных для слоев
 data = {
     1:{'id': 1, 'name':'Q', 'thick': 45.0, 'sediments': 'Глина серая, желтая'},
-    2:{'id': 2, 'name':'J3', 'thick': 10, 'sediments': 'Песок мелко-среднезернистый'},
-    3:{'id': 3, 'name':'J3ox-c', 'thick': 15, 'sediments': 'Глина'},
-    4:{'id': 4, 'name':'C3g-P1a', 'thick': 25, 'sediments': 'Известняк'},
+    2:{'id': 2, 'name':'J\u2083', 'thick': 10, 'sediments': 'Песок мелко-среднезернистый'},
+    3:{'id': 3, 'name':'J\u2083ox-c', 'thick': 15, 'sediments': 'Глина'},
+    4:{'id': 4, 'name':'C\u2083g-P\u2081a', 'thick': 25, 'sediments': 'Известняк'},
     }
 
 def main():
@@ -23,6 +23,10 @@ def main():
     # Подложка
     r = draw.Rectangle(0, 0, 210*koef, 297*koef,
                        fill='white', stroke='black')
+    d.append(r)
+    # контур рисунка
+    r = draw.Rectangle(10*koef, 7*koef, 198*koef, 275*koef,
+                           fill='white', stroke='black')
     d.append(r)
     header(d)
     scale(d, 95)
@@ -78,6 +82,7 @@ def scale(d, well_depth):
         text = str((number+1)*section)
         d.append(draw.Text([text], 40, path=p, text_anchor='middle'))
         y_start -= mm_section
+
 
 
 # создание прямоугольника с текстом
@@ -150,31 +155,35 @@ def layers(d, well_depth, data):
     # смещение по x: (12, 12, 12, 30, 30, 15, 15, 12, 22.5, 22.5)
     # деля 250 на округленную глубину скважины - получаем сколько в мм метров
     scale_m = (250/(section_numbers * section))
-    # стартовые положения. Тут будет начало цикла
-    h_start = 0.0
-    x_start = 10 + 12
-    y_start = (297 - 15 - 25 - data[1]['thick']*scale_m)
-    rectangle(d, x_start, y_start, 12, data[1]['thick']*scale_m, str(data[1]['id']), 'h')
-    x_start += 12
-    rectangle(d, x_start, y_start, 12, data[1]['thick']*scale_m, data[1]['name'], 'h')
-    x_start += 12
-    rectangle(d, x_start, y_start, 30, data[1]['thick']*scale_m, data[1]['sediments'], 'h')
-    x_start += 30
-    rectangle(d, x_start, y_start, 30, data[1]['thick']*scale_m, 'Здесь будет ссылка на заливку', 'f')
-    x_start += 30
-    # подумать как убрать подписи вниз (к низу прямоугольника)
-    rectangle(d, x_start, y_start, 15, data[1]['thick']*scale_m, str(h_start), 'h')
-    x_start += 15
-    h_start += data[1]['thick']
-    rectangle(d, x_start, y_start, 15, data[1]['thick']*scale_m, str(h_start), 'h')
-    x_start += 15
-    rectangle(d, x_start, y_start, 15, data[1]['thick']*scale_m, str(data[1]['thick']), 'h')
-    # завершение цикла отрисовки геологии
-
-
-
-
-
+    # стартовые положения.
+    h_start = 0.0 # глубина
+    i = 1 # индекс в словаре (подумать как организовать передачу данных)
+    y_start = (297 - 15 - 25) # смещение по y после добавления заголовков
+    while i in data:
+        x_start = 10 + 12
+        rectangle(d, x_start, y_start, 12, -data[i]['thick']*scale_m, str(data[i]['id']), 'h')
+        x_start += 12
+        # ориентация для длинных индексов горизонтов
+        if len(data[i]['name']) > 3:
+            direction = 'v'
+        else:
+            direction = 'h'
+        rectangle(d, x_start, y_start, 12, -data[i]['thick']*scale_m, data[i]['name'], direction)
+        x_start += 12
+        rectangle(d, x_start, y_start, 30, -data[i]['thick']*scale_m, data[i]['sediments'], 'h')
+        x_start += 30
+        rectangle(d, x_start, y_start, 30, -data[i]['thick']*scale_m, 'Здесь будет ссылка на заливку', 'f')
+        x_start += 30
+        # подумать как убрать подписи вниз (к низу прямоугольника)
+        rectangle(d, x_start, y_start, 15, -data[i]['thick']*scale_m, str(h_start), 'h')
+        x_start += 15
+        h_start += data[1]['thick']
+        rectangle(d, x_start, y_start, 15, -data[i]['thick']*scale_m, str(h_start), 'h')
+        x_start += 15
+        rectangle(d, x_start, y_start, 15, -data[i]['thick']*scale_m, str(data[i]['thick']), 'h')
+        y_start -= data[i]['thick']*scale_m
+        i += 1
+        # завершение цикла отрисовки геологии
 
 
 if __name__ == "__main__":
