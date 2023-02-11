@@ -23,7 +23,7 @@ well_data = {'well_data': {
     'columns': {
         1: {'id': 1, 'D': 377, 'from': 0.0, 'till': 34.0, 'type': 'обсадная'},
         2: {'id': 2, 'D': 273, 'from': 0.0, 'till': 74.0, 'type': 'обсадная'},
-        3: {'id': 3, 'D': 273, 'from': 59.0, 'till': 95.0, 'type': 'фильтровая', 'filter': {
+        3: {'id': 3, 'D': 133, 'from': 59.0, 'till': 95.0, 'type': 'фильтровая', 'filter': {
             1: {'id': 1, 'from': 75.0, 'till': 79.0},
             2: {'id': 2, 'from': 85.0, 'till': 90.0},
         }}
@@ -219,23 +219,6 @@ def layers(d, well_depth, dt):
         # завершение цикла отрисовки геологии
 
 
-"""well_dto = {'well_data': {
-    'columns': {
-        1: {'id': 1, 'D': 377, 'from': 0.0, 'till': 34.0, 'type': 'обсадная'},
-        2: {'id': 2, 'D': 273, 'from': 0.0, 'till': 74.0, 'type': 'обсадная'},
-        3: {'id': 3, 'D': 273, 'from': 70.0, 'till': 95.0, 'type': 'фильтровая', 'filter': {
-            1: {'id': 1, 'from': 75.0, 'till': 79.0},
-            2: {'id': 2, 'from': 85.0, 'till': 90.0},
-        }}
-    },
-    'pump_type': 'ЭЦВ-6-10-110',
-    'pump_depth': 55.0,
-    'static_lvl': 32.0,
-    'dynamic_lvl': 35.0,
-    'well_depth': 95.0
-}}"""
-
-
 def well(d, well_dt):
     data = well_dt['well_data']
     # масштаб
@@ -248,19 +231,144 @@ def well(d, well_dt):
         column = data['columns'][i]
         y_start = 257 - column['from']*scale_m
         x_start = 76 + (30-d_start)/2
-        rectangle(d, x_start, y_start, d_start,
-                  (column['from'] - column['till'])*scale_m, 'white', 'f')
         # добавление интервалов фильтра
         if column['type'] == 'фильтровая':
+            rectangle(d, x_start, y_start, d_start,
+                      (column['from'] - column['till'])*scale_m, 'white', 'f')
+            # отрисовка конструкции и глубин для колонн
+            p = draw.Lines(163*koef, (257 - column['till']*scale_m+2)*koef,
+                           185.5*koef, (257 -
+                                        column['till']*scale_m+2)*koef,
+                           close=False,
+                           stroke='black')
+            text = 'Ф.К. ' + str(column['D'])
+            d.append(draw.Text(text,
+                               40, path=p, text_anchor='middle'))
+            p = draw.Lines(185.5*koef, (257-column['till']*scale_m+2)*koef,
+                           208*koef, (257 -
+                                      column['till']*scale_m+2)*koef,
+                           close=False,
+                           stroke='white')
+            d.append(draw.Text(str(column['till']),
+                               40, path=p, text_anchor='middle'))
             filter = column['filter']
             i_f = 1
             while i_f in filter:
                 rectangle(d, x_start, 257 - filter[i_f]['from']*scale_m, d_start,
                           (filter[i_f]['from'] - filter[i_f]['till'])*scale_m, 'red', 'f')
                 i_f += 1
+        elif column['type'] == 'О.С.':
+            # надо добавить построение открытого ствола
+            rectangle(d, x_start, y_start, d_start,
+                      (column['from'] - column['till'])*scale_m, 'white', 'f')
+            pass
+        elif column['type'] == 'обсадная':
+            rectangle(d, x_start, y_start, d_start,
+                      (column['from'] - column['till'])*scale_m, 'white', 'f')
+            # добавление данных по диаметру обсадных колонн
+            p = draw.Lines(163*koef, (257-column['till']*scale_m+2)*koef,
+                           185.5*koef, (257-column['till']*scale_m+2)*koef,
+                           close=False,
+                           stroke='white')
+            d.append(draw.Text(str(column['D']),
+                               40, path=p, text_anchor='middle'))
+            p = draw.Lines(163*koef, (257-column['till']*scale_m)*koef,
+                           185.5*koef, (257-column['till']*scale_m)*koef,
+                           close=False,
+                           stroke='black')
+            d.append(p)
+            # добавление данных по глубинам
+            p = draw.Lines(185.5*koef, (y_start-column['till']*scale_m+2)*koef,
+                           208*koef, (y_start-column['till']*scale_m+2)*koef,
+                           close=False,
+                           stroke='white')
+            d.append(draw.Text(str(column['till']),
+                               40, path=p, text_anchor='middle'))
+            p = draw.Lines(185.5*koef, (y_start-column['till']*scale_m)*koef,
+                           208*koef, (y_start-column['till']*scale_m)*koef,
+                           close=False,
+                           stroke='black')
+            d.append(p)
         d_start -= 2
         i += 1
+    # статический уровень
+    if well_dt['well_data']['static_lvl']:
+        st_lvl = well_dt['well_data']['static_lvl']
+        p = draw.Lines(158*koef, (257-st_lvl*scale_m+4)*koef,
+                       158*koef, (257-st_lvl*scale_m+20)*koef,
+                       close=False,
+                       stroke='white')
+        d.append(draw.Text('С.У. ' + str(st_lvl),
+                           40, path=p, text_anchor='middle'))
+        p = draw.Lines(151*koef, (257-st_lvl*scale_m)*koef,
+                       163*koef, (257-st_lvl*scale_m)*koef,
+                       close=False,
+                       stroke='#00a8f0',
+                       stroke_width=5)
+        d.append(p)
+    # динамический уровень
+    if well_dt['well_data']['dynamic_lvl']:
+        dn_lvl = well_dt['well_data']['dynamic_lvl']
+        p = draw.Lines(158*koef, (257-dn_lvl*scale_m-20)*koef,
+                       158*koef, (257-dn_lvl*scale_m-4)*koef,
+                       close=False,
+                       stroke='white')
+        d.append(draw.Text('Д.У. ' + str(dn_lvl),
+                           40, path=p, text_anchor='middle'))
+        p = draw.Lines(151*koef, (257-dn_lvl*scale_m)*koef,
+                       163*koef, (257-dn_lvl*scale_m)*koef,
+                       close=False,
+                       stroke='#001eff',
+                       stroke_width=5)
+        d.append(p)
 
+    # насос
+    if well_dt['well_data']['pump_type']:
+        # диаметр насоса задается по той же формуле,
+        # что и диаметр каждой последующей колонны
+        x_start = 76 + (30-d_start)/2
+        rectangle(d, x_start, 257-well_dt['well_data']['pump_depth']*scale_m, d_start,
+                  8, '#7a8aff', 'f')
+        p = draw.Lines(76*koef, (257-well_dt['well_data']['pump_depth']*scale_m-2)*koef,
+                       106*koef, (257-well_dt['well_data']
+                                  ['pump_depth']*scale_m-2)*koef,
+                       close=False,
+                       stroke='white')
+        d.append(draw.Text(str(well_dt['well_data']['pump_depth']),
+                           20, path=p, text_anchor='middle'))
+        # водоподъемная труба
+        p = draw.Lines(91*koef, (257-well_dt['well_data']
+                                 ['pump_depth']*scale_m+8)*koef,
+                       91*koef, 257*koef,
+                       close=False,
+                       stroke='#7a8aff',
+                       stroke_width=5)
+        d.append(p)
+        # название насоса
+        p = draw.Lines(90*koef, (257-well_dt['well_data']
+                            ['pump_depth']*scale_m+10)*koef,
+                90*koef, 257*koef,
+                close=False,
+                stroke='white')
+        d.append(draw.Text(str(well_dt['well_data']['pump_type']),
+                           20, path=p, text_anchor='left'))
+
+
+"""well_dto = {'well_data': {
+    'columns': {
+        1: {'id': 1, 'D': 377, 'from': 0.0, 'till': 34.0, 'type': 'обсадная'},
+        2: {'id': 2, 'D': 273, 'from': 0.0, 'till': 74.0, 'type': 'обсадная'},
+        3: {'id': 3, 'D': 133, 'from': 70.0, 'till': 95.0, 'type': 'фильтровая', 'filter': {
+            1: {'id': 1, 'from': 75.0, 'till': 79.0},
+            2: {'id': 2, 'from': 85.0, 'till': 90.0},
+        }}
+    },
+    'pump_type': 'ЭЦВ-6-10-110',
+    'pump_depth': 55.0,
+    'static_lvl': 32.0,
+    'dynamic_lvl': 35.0,
+    'well_depth': 95.0
+}}"""
 
 if __name__ == "__main__":
     main()
