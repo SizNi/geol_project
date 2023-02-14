@@ -1,4 +1,6 @@
 import drawSvg as draw
+from index_colours import colour
+from specks import speck
 import math
 
 # размер листа А4 при плотности пикселей 300 dpi
@@ -201,8 +203,11 @@ def layers(d, well_depth, dt):
         rectangle(d, x_start, y_start, 30, -
                   data[i]['thick']*scale_m, data[i]['sediments'], 'h')
         x_start += 30
+        layer_fill = colour(data[i]['name'])
         rectangle(d, x_start, y_start, 30, -
-                  data[i]['thick']*scale_m, 'blue', 'f')
+                  data[i]['thick']*scale_m, layer_fill, 'f')
+        speck(d, x_start, y_start, 30,
+                  data[i]['thick']*scale_m, 'none')
         x_start += 30
         # подумать как убрать подписи вниз (к низу прямоугольника)
         rectangle(d, x_start, y_start, 15, -
@@ -254,8 +259,12 @@ def well(d, well_dt):
             filter = column['filter']
             i_f = 1
             while i_f in filter:
+                # отрисовка градиента фильтра и интервалов
+                gradient = draw.LinearGradient(x_start*koef, (257 - filter[i_f]['from']*scale_m)*koef,(x_start+d_start)*koef,(257 - filter[i_f]['from']*scale_m)*koef)
+                gradient.addStop(0, '#bdc4ff', 1)
+                gradient.addStop(1, '#0315b5', 0)
                 rectangle(d, x_start, 257 - filter[i_f]['from']*scale_m, d_start,
-                          (filter[i_f]['from'] - filter[i_f]['till'])*scale_m, 'red', 'f')
+                          (filter[i_f]['from'] - filter[i_f]['till'])*scale_m, gradient, 'f')
                 i_f += 1
         elif column['type'] == 'О.С.':
             # надо добавить построение открытого ствола

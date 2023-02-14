@@ -1,16 +1,27 @@
-well_dt = {'well_data': {
-    'columns': {
-        1: {'id': 1, 'D': 377, 'from': 0.0, 'till': 34.0, 'type': 'обсадная'},
-        2: {'id': 2, 'D': 273, 'from': 0.0, 'till': 74.0, 'type': 'обсадная'},
-        3: {'id': 3, 'D': 273, 'from': 70.0, 'till': 95.0, 'type': 'фильтровая', 'filter': {
-            1: {'id': 1, 'from': 75.0, 'till': 79.0},
-            1: {'id': 2, 'from': 85.0, 'till': 90.0},
-        }}
-    },
-    'pump_type': 'ЭЦВ-6-10-110',
-    'pump_depth': 55.0,
-    'static_lvl': 32.0,
-    'dynamic_lvl': 35.0,
-    'well_depth': 95.0
-}}
-print(well_dt['well_data']['columns'][1])
+import drawSvg as draw
+width = 100
+height = 100
+d = draw.Drawing(width, height, origin=(0, 0), displayInline=False)
+
+with open('new-fill.svg', 'r') as file:
+    raw_svg = file.read()
+    raw_latex_1 = raw_svg.replace('<?xml version=\'1.0\'?>', '')
+    raw_rendered_svg_1 = draw.Raw(raw_latex_1)
+#o = draw.Image(0, 0, 100, 100, raw_rendered_svg_1)
+#d.append(o)
+
+pattern = draw.Raw(f'''
+<defs>
+  <pattern id="pattern1"
+           x="0" y="0" width="100" height="100"
+           patternUnits="userSpaceOnUse" >
+    {raw_rendered_svg_1}
+        <circle cx="10" cy="10" r="10"
+            style="stroke: #0000ff; fill: url(#pattern1)"/>
+  </pattern>
+</defs>''')
+d.append(pattern)
+r = draw.Rectangle(0, 0, 100, 100,
+                    fill='url(#pattern1)', stroke='black')
+d.append(r)
+d.saveSvg('example_2.svg')
