@@ -53,6 +53,8 @@ def main():
     layers(d, 95, layers_data)
     well(d, well_data)
     d.savePng('example.png')
+    # почему-то Svg криво работает, половина графики не отображается
+    # d.saveSvg('example_svg.svg')
 
 
 # выбор масштаба (размер секции и количество секций)
@@ -208,7 +210,7 @@ def layers(d, well_depth, dt):
         rectangle(d, x_start, y_start, 30, -
                   data[i]['thick']*scale_m, layer_fill, 'f')
         speck(d, x_start, y_start, 30,
-                  data[i]['thick']*scale_m, data[i]['sediments'])
+              data[i]['thick']*scale_m, data[i]['sediments'])
         x_start += 30
         # подумать как убрать подписи вниз (к низу прямоугольника)
         rectangle(d, x_start, y_start, 15, -
@@ -261,7 +263,8 @@ def well(d, well_dt):
             i_f = 1
             while i_f in filter:
                 # отрисовка градиента фильтра и интервалов
-                gradient = draw.LinearGradient(x_start*koef, (257 - filter[i_f]['from']*scale_m)*koef,(x_start+d_start)*koef,(257 - filter[i_f]['from']*scale_m)*koef)
+                gradient = draw.LinearGradient(
+                    x_start*koef, (257 - filter[i_f]['from']*scale_m)*koef, (x_start+d_start)*koef, (257 - filter[i_f]['from']*scale_m)*koef)
                 gradient.addStop(0, '#bdc4ff', 1)
                 gradient.addStop(1, '#0315b5', 0)
                 rectangle(d, x_start, 257 - filter[i_f]['from']*scale_m, d_start,
@@ -356,10 +359,10 @@ def well(d, well_dt):
         d.append(p)
         # название насоса
         p = draw.Lines(90*koef, (257-well_dt['well_data']
-                            ['pump_depth']*scale_m+10)*koef,
-                90*koef, 257*koef,
-                close=False,
-                stroke='white')
+                                 ['pump_depth']*scale_m+10)*koef,
+                       90*koef, 257*koef,
+                       close=False,
+                       stroke='white')
         d.append(draw.Text(str(well_dt['well_data']['pump_type']),
                            20, path=p, text_anchor='left'))
 
