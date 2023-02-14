@@ -15,10 +15,10 @@ koef = 2480/210
 # шаблон данных для слоев
 # из бд будет прихдить список
 layers_data = {'layers': {
-    1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': 'Глина серая, желтая'},
-    2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': 'Песок мелко-среднезернистый'},
-    3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': 'Глина'},
-    4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': 'Известняк'},
+    1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('пески',)},
+    2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': ('глины',)},
+    3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('пески',)},
+    4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('известняки',)}
 }
 }
 well_data = {'well_data': {
@@ -200,14 +200,15 @@ def layers(d, well_depth, dt):
         rectangle(d, x_start, y_start, 12, -
                   data[i]['thick']*scale_m, data[i]['name'], direction)
         x_start += 12
+        # тут поправить, чтоб вместо кортежа сюда в текст приходила строка
         rectangle(d, x_start, y_start, 30, -
-                  data[i]['thick']*scale_m, data[i]['sediments'], 'h')
+                  data[i]['thick']*scale_m, data[i]['sediments'][0], 'h')
         x_start += 30
         layer_fill = colour(data[i]['name'])
         rectangle(d, x_start, y_start, 30, -
                   data[i]['thick']*scale_m, layer_fill, 'f')
         speck(d, x_start, y_start, 30,
-                  data[i]['thick']*scale_m, 'none')
+                  data[i]['thick']*scale_m, data[i]['sediments'])
         x_start += 30
         # подумать как убрать подписи вниз (к низу прямоугольника)
         rectangle(d, x_start, y_start, 15, -
