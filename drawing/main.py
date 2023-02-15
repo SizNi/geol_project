@@ -15,10 +15,10 @@ koef = 2480/210
 # шаблон данных для слоев
 # из бд будет прихдить список
 layers_data = {'layers': {
-    1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('пески',)},
-    2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': ('глины',)},
-    3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('пески',)},
-    4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('известняки',)}
+    1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('суглинки',)},
+    2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': ('суглинки',)},
+    3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('суглинки',)},
+    4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('суглинки',)}
 }
 }
 well_data = {'well_data': {
