@@ -3,12 +3,6 @@ import drawSvg as draw
 # отрисовка геологических крапов
 # ГОСТ 21.302-2013
 koef = 2480/210
-# d = draw.Drawing(210*koef, 297*koef, origin=(0, 0), displayInline=False)
-"""x = 100
-y = 100
-width = 30
-height = 30
-sediments = ('пески', 'глины', 'известняки')"""
 
 
 def speck(d, x, y, width, height, sediments):
@@ -102,15 +96,17 @@ def limestones(d, x, y, width, height):
         y_start -= delta_y
 
 
-# суглинки, угол наклона - 30 градусов
+# суглинки
 def loams(d, x, y, width, height):
     delta_y = 5*koef
-    # регулировка угла наклона (в нашем случае 30 градусов)
-    tg_30 = 0.57735026919
+    # угол наклона
+    alpha = 30
+    tg_30 = math.tan((math.pi/180)*alpha)
     delta_x = tg_30 * delta_y
     y_start = y * koef
     x_start = x * koef
     # отрисовываем с левого угла
+    # движемся по левой грани вниз, по верхней грани вправо
     while y_start >= (y - height) * koef + delta_y and x_start <= (x + width) * koef:
         c = draw.Lines(
             x*koef, y_start - delta_y,
@@ -121,8 +117,8 @@ def loams(d, x, y, width, height):
         y_start -= delta_y
         x_start += delta_x
     # переназначаем начальные значения
-    # обрезанный кусок нижнего левого угла
     x_low_start = ((y-height)*koef - y_start) * tg_30 + delta_x
+    # движемся по верхней грани вправо, по нижней грани - тоже вправо
     while x_start <= (x + width) * koef - delta_x:
         c = draw.Lines(
             x * koef + x_low_start, (y - height) * koef,
@@ -134,11 +130,11 @@ def loams(d, x, y, width, height):
         x_start += delta_x
     # правый нижний угол
     # переназначаем начальные значения
-    # обрезанный кусок нижнего левого угла
-    ctg_30 = 1.732050808
-    y_right_start = delta_y - (delta_x - (x_start + delta_x - (x+width)*koef))/tg_30
+    y_right_start = delta_y - \
+        (delta_x - (x_start + delta_x - (x+width)*koef))/tg_30
+    # движемя по правой грани вниз, по нижней грани - вправо
     while y * koef - y_right_start >= (y - height) * koef:
-        #print(y_right_start)
+        # print(y_right_start)
         c = draw.Lines(
             x*koef + x_low_start, (y - height) * koef,
             (x + width)*koef, y*koef - y_right_start,
@@ -147,3 +143,5 @@ def loams(d, x, y, width, height):
         d.append(c)
         y_right_start += delta_y
         x_low_start += delta_x
+    # дописать случай, когда движемся вниз по левой и правой грани
+    # и выставить условия для остальных

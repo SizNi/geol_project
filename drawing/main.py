@@ -214,14 +214,14 @@ def layers(d, well_depth, dt):
         x_start += 30
         # подумать как убрать подписи вниз (к низу прямоугольника)
         rectangle(d, x_start, y_start, 15, -
-                  data[i]['thick']*scale_m, str(h_start), 'h')
+                  data[i]['thick']*scale_m, str(format(h_start, '.1f')), 'h')
         x_start += 15
         h_start += data[i]['thick']
         rectangle(d, x_start, y_start, 15, -
-                  data[i]['thick']*scale_m, str(h_start), 'h')
+                  data[i]['thick']*scale_m, str(format(h_start, '.1f')), 'h')
         x_start += 15
         rectangle(d, x_start, y_start, 15, -
-                  data[i]['thick']*scale_m, str(data[i]['thick']), 'h')
+                  data[i]['thick']*scale_m, str(format(data[i]['thick'], '.1f')), 'h')
         y_start -= data[i]['thick']*scale_m
         i += 1
         # завершение цикла отрисовки геологии
