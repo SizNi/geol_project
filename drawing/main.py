@@ -14,28 +14,28 @@ mm_y = 0.003366
 koef = 2480/210
 # шаблон данных для слоев
 # из бд будет прихдить список
-layers_data = {'layers': {
-    1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('суглинки',)},
-    2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': ('суглинки',)},
-    3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('суглинки',)},
-    4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('суглинки',)}
-}
-}
-well_data = {'well_data': {
-    'columns': {
-        1: {'id': 1, 'D': 377, 'from': 0.0, 'till': 34.0, 'type': 'обсадная'},
-        2: {'id': 2, 'D': 273, 'from': 0.0, 'till': 74.0, 'type': 'обсадная'},
-        3: {'id': 3, 'D': 133, 'from': 59.0, 'till': 95.0, 'type': 'фильтровая', 'filter': {
-            1: {'id': 1, 'from': 75.0, 'till': 79.0},
-            2: {'id': 2, 'from': 85.0, 'till': 90.0},
-        }}
+well_data = {
+    'layers': {
+        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('мергели',)},
+        2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': ('глины',)},
+        3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('суглинки',)},
+        4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('известняки',)}
     },
-    'pump_type': 'ЭЦВ-6-10-110',
-    'pump_depth': 55.0,
-    'static_lvl': 32.0,
-    'dynamic_lvl': 35.0,
-    'well_depth': 95.0
-}}
+    'well_data': {
+        'columns': {
+            1: {'id': 1, 'D': 377, 'from': 0.0, 'till': 34.0, 'type': 'обсадная'},
+            2: {'id': 2, 'D': 273, 'from': 0.0, 'till': 74.0, 'type': 'обсадная'},
+            3: {'id': 3, 'D': 133, 'from': 59.0, 'till': 95.0, 'type': 'фильтровая', 'filter': {
+                1: {'id': 1, 'from': 75.0, 'till': 79.0},
+                2: {'id': 2, 'from': 85.0, 'till': 90.0},
+            }}
+        },
+        'pump_type': 'ЭЦВ-6-10-110',
+        'pump_depth': 55.0,
+        'static_lvl': 32.0,
+        'dynamic_lvl': 35.0,
+        'well_depth': 95.0
+    }}
 
 
 def main():
@@ -50,7 +50,7 @@ def main():
     d.append(r)
     header(d)
     scale(d, 95)
-    layers(d, 95, layers_data)
+    layers(d, 95, well_data)
     well(d, well_data)
     d.savePng('example.png')
     # почему-то Svg криво работает, половина графики не отображается
