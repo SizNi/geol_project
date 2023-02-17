@@ -2,43 +2,14 @@ import drawSvg as draw
 from index_colours import colour
 from specks import speck
 import math
+from format import frmt
 
 # размер листа А4 при плотности пикселей 300 dpi
-width, height = 2480, 3508
-# коэффициент пересчета мм -> % от общей ширины/высоты (2480/210 = 11,809 (1 мм в пикселях))
-# 2480/100 = 24,8 пикселя в 1%, соответственно 1 мм = 11,809/24,8 = 0,4761% (по y)
-# 3508/100 = 35,08 пикселя в 1%, соответственно 1 мм = 11,809/35,08 = 0,3366% (по x)
-# общая высота рисунка (самой скважины) - 250 мм, названий столбцов - 25 мм
-mm_x = 0.004761
-mm_y = 0.003366
-koef = 2480/210
-# шаблон данных для слоев
-# из бд будет прихдить список
-well_data = {
-    'layers': {
-        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('мергели',)},
-        2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': ('глины',)},
-        3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('суглинки',)},
-        4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('известняки',)}
-    },
-    'well_data': {
-        'columns': {
-            1: {'id': 1, 'D': 377, 'from': 0.0, 'till': 34.0, 'type': 'обсадная'},
-            2: {'id': 2, 'D': 273, 'from': 0.0, 'till': 74.0, 'type': 'обсадная'},
-            3: {'id': 3, 'D': 133, 'from': 59.0, 'till': 95.0, 'type': 'фильтровая', 'filter': {
-                1: {'id': 1, 'from': 75.0, 'till': 79.0},
-                2: {'id': 2, 'from': 85.0, 'till': 90.0},
-            }}
-        },
-        'pump_type': 'ЭЦВ-6-10-110',
-        'pump_depth': 55.0,
-        'static_lvl': 32.0,
-        'dynamic_lvl': 35.0,
-        'well_depth': 95.0
-    }}
+
+width, height, koef = frmt('a4')
 
 
-def main():
+def main(well_data):
     d = draw.Drawing(width, height, origin=(0, 0), displayInline=False)
     # Подложка
     r = draw.Rectangle(0, 0, 210*koef, 297*koef,
@@ -51,7 +22,7 @@ def main():
     header(d)
     scale(d, 95)
     layers(d, 95, well_data)
-    well(d, well_data)
+    #well(d, well_data)
     d.savePng('example.png')
     # почему-то Svg криво работает, половина графики не отображается
     # d.saveSvg('example_svg.svg')
@@ -367,21 +338,28 @@ def well(d, well_dt):
                            20, path=p, text_anchor='left'))
 
 
-"""well_dto = {'well_data': {
-    'columns': {
-        1: {'id': 1, 'D': 377, 'from': 0.0, 'till': 34.0, 'type': 'обсадная'},
-        2: {'id': 2, 'D': 273, 'from': 0.0, 'till': 74.0, 'type': 'обсадная'},
-        3: {'id': 3, 'D': 133, 'from': 70.0, 'till': 95.0, 'type': 'фильтровая', 'filter': {
-            1: {'id': 1, 'from': 75.0, 'till': 79.0},
-            2: {'id': 2, 'from': 85.0, 'till': 90.0},
-        }}
+well_data = {
+    'layers': {
+        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('мергели',)},
+        2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': ('супеси',)},
+        3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('суглинки',)},
+        4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('песчаники',)}
     },
-    'pump_type': 'ЭЦВ-6-10-110',
-    'pump_depth': 55.0,
-    'static_lvl': 32.0,
-    'dynamic_lvl': 35.0,
-    'well_depth': 95.0
-}}"""
+    'well_data': {
+        'columns': {
+            1: {'id': 1, 'D': 377, 'from': 0.0, 'till': 34.0, 'type': 'обсадная'},
+            2: {'id': 2, 'D': 273, 'from': 0.0, 'till': 74.0, 'type': 'обсадная'},
+            3: {'id': 3, 'D': 133, 'from': 59.0, 'till': 95.0, 'type': 'фильтровая', 'filter': {
+                1: {'id': 1, 'from': 75.0, 'till': 79.0},
+                2: {'id': 2, 'from': 85.0, 'till': 90.0},
+            }}
+        },
+        'pump_type': 'ЭЦВ-6-10-110',
+        'pump_depth': 55.0,
+        'static_lvl': 32.0,
+        'dynamic_lvl': 35.0,
+        'well_depth': 95.0
+    }}
 
 if __name__ == "__main__":
-    main()
+    main(well_data)

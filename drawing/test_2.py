@@ -1,2 +1,2 @@
-import math
-print(math.tan(0.52))
+for n in range(1, 5):
+    print(n)
