@@ -2,11 +2,12 @@ import math
 import drawSvg as draw
 from format import frmt
 # отрисовка геологических крапов
-# ГОСТ 21.302-2013
+# ГОСТ Р 21.302-2021
 _, _, koef = frmt('a4')
 
 
-# добавленные типы отложений: пески, суглинки, супеси, глины, известняки, мергели
+# добавленные типы отложений: пески, суглинки, супеси, глины, известняки, мергели, супеси, песчаники,
+# доломиты,
 def speck(d, x, y, width, height, sediments):
 
     if len(sediments) == 1:
@@ -24,6 +25,8 @@ def speck(d, x, y, width, height, sediments):
             sandy_loams(d, x, y, width, height)
         elif sediments[0] == 'песчаники':
             sandstones(d, x, y, width, height)
+        elif sediments[0] == 'доломиты':        
+            dolomites(d, x, y, width, height)
 
 
 # пески
@@ -348,6 +351,69 @@ def sandstones(d, x, y, width, height):
                         c = draw.Circle(x_start + step*n, y_start -
                                         delta_y/2, 0.2*koef, fill='black')
                         d.append(c)
+                x_start += delta_x
+        i += 1
+        # смещение начальной точки
+        if i % 2 == 0:
+            delta -= delta_x/2
+        else:
+            delta += delta_x/2
+        # обнуление начальной точки + смещение
+        x_start = (x + indent) * koef + delta
+        y_start -= delta_y
+
+
+# доломиты
+def dolomites(d, x, y, width, height):
+    # смещение по горизонтали, вертикали, изменение смещения по горизонтали
+    delta_y = 3 * koef
+    delta_x = 4 * delta_y
+    delta = 0
+    # начальный отступ
+    indent = 1
+    # расстояние между палками для крапа
+    between = 0.3 * koef
+    i = 0
+    # стартовые значения
+    y_start = y * koef
+    x_start = (x + indent) * koef
+    while y_start > (y - height) * koef:
+        c = draw.Lines(x*koef, y_start, (x + width) *
+                       koef, y_start, stroke='black')
+        d.append(c)
+        while x_start < (width + x - indent) * koef:
+            # следующий цикл нужен, чтоб обрезать вертикальные линии,
+            # которые могут вылезти за пределы слоя
+            if (i + 1) * delta_y <= height * koef:
+                c = draw.Lines(
+                    x_start + between, y_start,
+                    x_start + between, y_start - delta_y,
+                    stroke='black'
+                )
+                d.append(c)
+                c = draw.Lines(
+                    x_start - between, y_start,
+                    x_start - between, y_start - delta_y,
+                    stroke='black'
+                )
+                d.append(c)
+                x_start += delta_x
+            else:
+                # x2 - как раз смещение минус разница, вылезающая за пределы
+                c = draw.Lines(
+                    x_start + between, y_start,
+                    x_start + between, y_start - delta_y +
+                    ((i + 1) * delta_y - height * koef),
+                    stroke='black'
+                )
+                d.append(c)
+                c = draw.Lines(
+                    x_start - between, y_start,
+                    x_start - between, y_start - delta_y +
+                    ((i + 1) * delta_y - height * koef),
+                    stroke='black'
+                )
+                d.append(c)
                 x_start += delta_x
         i += 1
         # смещение начальной точки

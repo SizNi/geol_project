@@ -22,7 +22,7 @@ def main(well_data):
     header(d)
     scale(d, 95)
     layers(d, 95, well_data)
-    #well(d, well_data)
+    well(d, well_data)
     d.savePng('example.png')
     # почему-то Svg криво работает, половина графики не отображается
     # d.saveSvg('example_svg.svg')
@@ -340,10 +340,10 @@ def well(d, well_dt):
 
 well_data = {
     'layers': {
-        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('мергели',)},
+        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('доломиты',)},
         2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': ('супеси',)},
         3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('суглинки',)},
-        4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('песчаники',)}
+        4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('доломиты',)}
     },
     'well_data': {
         'columns': {
