@@ -6,29 +6,32 @@ from format import frmt
 _, _, koef = frmt('a4')
 
 
-# добавленные типы отложений: пески, суглинки, супеси, глины, известняки, мергели, супеси, песчаники,
-# доломиты,
+# добавленные типы отложений: пески, суглинки, супеси, глины, известняки, мергели, песчаники,
+# доломиты, мел,
 def speck(d, x, y, width, height, sediments):
-
-    if len(sediments) == 1:
-        if sediments[0] == 'пески':
+    height = height/len(sediments)
+    for elem in sediments:
+        if elem == 'пески':
             sands(d, x, y, width, height)
-        elif sediments[0] == 'глины':
+        elif elem == 'глины':
             clays(d, x, y, width, height)
-        elif sediments[0] == 'известняки':
+        elif elem == 'известняки':
             limestones(d, x, y, width, height)
-        elif sediments[0] == 'суглинки':
+        elif elem == 'суглинки':
             loams(d, x, y, width, height)
-        elif sediments[0] == 'мергели':
+        elif elem == 'мергели':
             marls(d, x, y, width, height)
-        elif sediments[0] == 'супеси':
+        elif elem == 'супеси':
             sandy_loams(d, x, y, width, height)
-        elif sediments[0] == 'песчаники':
+        elif elem == 'песчаники':
             sandstones(d, x, y, width, height)
-        elif sediments[0] == 'доломиты':
+        elif elem == 'доломиты':
             dolomites(d, x, y, width, height)
-        elif sediments[0] == 'мел':   
+        elif elem == 'мел':   
             chalk(d, x, y, width, height)
+        else:
+            raise ValueError('Что-то пошло не так. Возможно таких отложений нет')
+        y -= height
 
 
 # пески
@@ -119,7 +122,7 @@ def loams(d, x, y, width, height):
     x_start = x * koef
     # отрисовываем с левого угла
     # движемся по левой грани вниз, по верхней грани вправо
-    while y_start >= (y - width/tg_30) * koef and x_start <= (x + width) * koef:
+    while y_start >= (y - height) * koef + delta_y and x_start <= (x + width) * koef:
         c = draw.Lines(
             x*koef, y_start - delta_y,
             x_start + delta_x, y*koef,
@@ -133,7 +136,10 @@ def loams(d, x, y, width, height):
         # переназначаем начальные значения
         x_low_start = ((y-height)*koef - y_start) * tg_30 + delta_x
         # движемся по верхней грани вправо, по нижней грани - тоже вправо
-        while x_start <= (x + width) * koef - delta_x and (x + x_low_start) * koef <= (x + width) * koef:
+        while x_start <= (x + width) * koef - delta_x and x * koef + x_low_start <= (x + width) * koef:
+            print(3)
+            print((x + x_low_start) * koef, (x + width) * koef)
+            print(delta_x)
             c = draw.Lines(
                 x * koef + x_low_start, (y - height) * koef,
                 x_start + delta_x, y*koef,
@@ -148,7 +154,6 @@ def loams(d, x, y, width, height):
         y_right_start = delta_y - \
             (delta_x - (x_start + delta_x - (x+width)*koef))/tg_30
         while y_start >= (y-height) * koef + delta_y:
-            print(y_right_start)
             c = draw.Lines(
                 x * koef, y_start - delta_y,
                 (x + width) * koef, y*koef - y_right_start,
@@ -234,7 +239,7 @@ def sandy_loams(d, x, y, width, height):
     x_start = x * koef
     # отрисовываем с левого угла
     # движемся по левой грани вниз, по верхней грани вправо
-    while y_start >= (y - width/tg_30) * koef and x_start <= (x + width) * koef:
+    while y_start >= (y - height) * koef + delta_y and x_start <= (x + width) * koef:
         c = draw.Lines(
             x*koef, y_start - delta_y,
             x_start + delta_x, y*koef,
@@ -249,7 +254,7 @@ def sandy_loams(d, x, y, width, height):
         # переназначаем начальные значения
         x_low_start = ((y-height)*koef - y_start) * tg_30 + delta_x
         # движемся по верхней грани вправо, по нижней грани - тоже вправо
-        while x_start <= (x + width) * koef - delta_x and (x + x_low_start) * koef <= (x + width) * koef:
+        while x_start <= (x + width) * koef - delta_x and x * koef + x_low_start <= (x + width) * koef:
             c = draw.Lines(
                 x * koef + x_low_start, (y - height) * koef,
                 x_start + delta_x, y*koef,
@@ -265,7 +270,6 @@ def sandy_loams(d, x, y, width, height):
         y_right_start = delta_y - \
             (delta_x - (x_start + delta_x - (x+width)*koef))/tg_30
         while y_start >= (y-height) * koef + delta_y:
-            print(y_right_start)
             c = draw.Lines(
                 x * koef, y_start - delta_y,
                 (x + width) * koef, y*koef - y_right_start,
