@@ -25,8 +25,10 @@ def speck(d, x, y, width, height, sediments):
             sandy_loams(d, x, y, width, height)
         elif sediments[0] == 'песчаники':
             sandstones(d, x, y, width, height)
-        elif sediments[0] == 'доломиты':        
+        elif sediments[0] == 'доломиты':
             dolomites(d, x, y, width, height)
+        elif sediments[0] == 'мел':   
+            chalk(d, x, y, width, height)
 
 
 # пески
@@ -424,3 +426,30 @@ def dolomites(d, x, y, width, height):
         # обнуление начальной точки + смещение
         x_start = (x + indent) * koef + delta
         y_start -= delta_y
+
+
+# мел
+def chalk(d, x, y, width, height):
+    # смещение по горизонтали и вертикали (для мела одинаковое)
+    delta = 3/2*koef
+    # стартовые значения
+    y_start = y * koef - delta
+    x_start = x * koef + delta
+    # горизонтальная штриховка
+    while y_start > (y - height) * koef:
+        c = draw.Lines(
+            x*koef, y_start,
+            (x + width) * koef, y_start,
+            stroke='black'
+        )
+        d.append(c)
+        y_start -= delta
+    # вертикальная штриховка
+    while x_start < (x + width) * koef:
+        c = draw.Lines(
+            x_start, y*koef,
+            x_start, (y-height) * koef,
+            stroke='black'
+        )
+        d.append(c)
+        x_start += delta
