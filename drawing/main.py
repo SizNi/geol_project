@@ -351,10 +351,10 @@ def well(d, well_dt):
 
 well_data = {
     'layers': {
-        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('супеси', 'пески', 'гнейсы', 'мергели')},
+        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('супеси', 'пески', 'гнейсы', 'граниты')},
         2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': ('известняки', 'супеси', 'доломиты')},
         3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('пески', 'известняки', 'доломиты')},
-        4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('гнейсы',)}
+        4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('граниты',)}
     },
     'well_data': {
         'columns': {

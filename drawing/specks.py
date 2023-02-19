@@ -7,7 +7,7 @@ _, _, koef = frmt('a4')
 
 
 # добавленные типы отложений: пески, суглинки, супеси, глины, известняки, мергели, песчаники,
-# доломиты, мел, гнейсы
+# доломиты, мел, гнейсы, граниты
 def speck(d, x, y, width, height, sediments):
     height = height/len(sediments)
     for elem in sediments:
@@ -31,6 +31,8 @@ def speck(d, x, y, width, height, sediments):
             chalk(d, x, y, width, height)
         elif elem == 'гнейсы':
             gneisses(d, x, y, width, height)
+        elif elem == 'граниты':            
+            granites(d, x, y, width, height)
         else:
             raise ValueError(
                 'Что-то пошло не так. Возможно таких отложений нет')
@@ -523,4 +525,48 @@ def gneisses(d, x, y, width, height):
         else:
             delta += (delta_x/2)/koef
 
+        y_start -= delta_y
+
+# единичный крап гранитов
+def granites_speck(d, x, y, size_1, st_width):
+    c = draw.Lines(
+        x, y,
+        x + size_1 * koef, y,
+        stroke='black',
+        stroke_width=f'{st_width}',
+    )
+    d.append(c)
+    c = draw.Lines(
+        x + size_1*koef / 2, y + size_1 * koef / 2,
+        x + size_1*koef / 2, y - size_1 * koef / 2,
+        stroke='black',
+        stroke_width=f'{st_width}',
+    )
+    d.append(c)
+
+
+def granites(d, x, y, width, height):
+    # масштаб размера
+    size = 2.2
+    # смещение по горизонтали, вертикали, изменение смещения по горизонтали
+    delta_x = (size + 1.6 * size) * koef
+    delta_y = 1.2*size*koef
+    delta = 1.15
+    indent = size/2
+    i = 1
+    # стартовые значения
+    st_width = 3
+    y_start = (y - indent - 1.15) * koef
+    while y_start > (y - height + indent) * koef:
+        x_start = (x + delta) * koef
+        while x_start < (width + x) * koef:
+            granites_speck(d, x_start, y_start, size, st_width)
+            x_start += delta_x
+        i += 1
+        if i % 2 == 1:
+            delta -= (delta_x/2)/koef
+            st_width += 2
+        else:
+            delta += (delta_x/2)/koef
+            st_width -= 2
         y_start -= delta_y
