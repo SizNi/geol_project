@@ -50,7 +50,7 @@ def header(d):
     rectangle(d, 22, 297-15, 12, -25, '№ слоя', 'v')
     rectangle(d, 34, 297-15, 12, -25, 'Возраст', 'v')
     rectangle(d, 46, 297-15, 30, -25, 'Описание пород', 'h')
-    rectangle(d, 76, 297-15, 30, -25, 'Разрез скважины', 'h')
+    rectangle(d, 76, 297-15, 30, -25, 'Разрез   скважины', 'h')
     rectangle(d, 106, 297-15, 45, -10, 'Залегание слоя, м', 'h')
     rectangle(d, 106, 297-25, 15, -15, 'От', 'h')
     rectangle(d, 121, 297-25, 15, -15, 'До', 'h')
@@ -131,9 +131,19 @@ def rectangle(d, x, y, x1, y1, text, direction):
                            (x+x1)*koef, (y+step+1)*koef,
                            close=False,
                            stroke='white')
-            insert = str(text[text_start_step:text_step]) + '-'
-            d.append(
-                draw.Text([insert], 40, path=p, text_anchor='middle'))
+            if str(text[text_step-1]) == ',':
+                insert = str(text[text_start_step:text_step])
+                d.append(
+                    draw.Text([insert], 40, path=p, text_anchor='middle'))
+            elif str(text[text_step-1]) == ' ':
+                insert = str(text[text_start_step:text_step])
+                d.append(
+                    draw.Text([insert], 40, path=p, text_anchor='middle'))
+            else:
+                insert = str(text[text_start_step:text_step]) + '-'
+                d.append(
+                    draw.Text([insert], 40, path=p, text_anchor='middle'))
+
             # смещение относительно первоначальной строки
             y += -5
             i += 1
@@ -173,9 +183,10 @@ def layers(d, well_depth, dt):
         rectangle(d, x_start, y_start, 12, -
                   data[i]['thick']*scale_m, data[i]['name'], direction)
         x_start += 12
-        # тут поправить, чтоб вместо кортежа сюда в текст приходила строка
+        # преобразование отложений из кортежа в строку для описания разреза
+        sediments_text = (', '.join(data[i]['sediments'])).capitalize()
         rectangle(d, x_start, y_start, 30, -
-                  data[i]['thick']*scale_m, data[i]['sediments'][0], 'h')
+                  data[i]['thick']*scale_m, sediments_text, 'h')
         x_start += 30
         layer_fill = colour(data[i]['name'])
         rectangle(d, x_start, y_start, 30, -
@@ -340,7 +351,7 @@ def well(d, well_dt):
 
 well_data = {
     'layers': {
-        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('супеси',)},
+        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('супеси', 'пески', 'мел', 'мергели')},
         2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': ('известняки', 'супеси', 'доломиты')},
         3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('пески', 'известняки', 'доломиты')},
         4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('известняки',)}
