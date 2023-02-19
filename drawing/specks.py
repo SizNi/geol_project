@@ -7,7 +7,7 @@ _, _, koef = frmt('a4')
 
 
 # добавленные типы отложений: пески, суглинки, супеси, глины, известняки, мергели, песчаники,
-# доломиты, мел,
+# доломиты, мел, гнейсы
 def speck(d, x, y, width, height, sediments):
     height = height/len(sediments)
     for elem in sediments:
@@ -27,10 +27,13 @@ def speck(d, x, y, width, height, sediments):
             sandstones(d, x, y, width, height)
         elif elem == 'доломиты':
             dolomites(d, x, y, width, height)
-        elif elem == 'мел':   
+        elif elem == 'мел':
             chalk(d, x, y, width, height)
+        elif elem == 'гнейсы':
+            gneisses(d, x, y, width, height)
         else:
-            raise ValueError('Что-то пошло не так. Возможно таких отложений нет')
+            raise ValueError(
+                'Что-то пошло не так. Возможно таких отложений нет')
         y -= height
 
 
@@ -137,9 +140,6 @@ def loams(d, x, y, width, height):
         x_low_start = ((y-height)*koef - y_start) * tg_30 + delta_x
         # движемся по верхней грани вправо, по нижней грани - тоже вправо
         while x_start <= (x + width) * koef - delta_x and x * koef + x_low_start <= (x + width) * koef:
-            print(3)
-            print((x + x_low_start) * koef, (x + width) * koef)
-            print(delta_x)
             c = draw.Lines(
                 x * koef + x_low_start, (y - height) * koef,
                 x_start + delta_x, y*koef,
@@ -457,3 +457,70 @@ def chalk(d, x, y, width, height):
         )
         d.append(c)
         x_start += delta
+
+
+# единичный крап гнейсов
+def gneisses_speck(d, x, y, size_1):
+    size_2 = (6/14) * size_1
+    c = draw.Lines(
+        x, y,
+        x+size_1*koef, y,
+        stroke='black'
+    )
+    d.append(c)
+    x += size_1*koef
+    c = draw.Lines(
+        x, y,
+        x+size_2*koef, y-size_2*koef,
+        stroke='black'
+    )
+    d.append(c)
+    x += size_2*koef
+    y -= size_2*koef
+    c = draw.Lines(
+        x, y,
+        x+size_2*koef, y+size_2*koef,
+        stroke='black'
+    )
+    d.append(c)
+    x += size_2*koef
+    y += size_2*koef
+    c = draw.Lines(
+        x, y,
+        x+size_1*koef, y,
+        stroke='black'
+    )
+    d.append(c)
+
+
+# гнейсы
+def gneisses(d, x, y, width, height):
+    # масштаб размера
+    size = 2.2
+    # смещение по горизонтали, вертикали, изменение смещения по горизонтали
+    delta_x = (40/14) * size * koef + (12/14) * size * koef
+    delta_y = 2*koef
+    delta = 0
+    indent = 1
+    i = 1
+    # стартовые значения
+    y_start = (y - indent) * koef
+    while y_start > (y - height + indent) * koef:
+        x_start = (x + delta) * koef
+        if i % 2 != 1:
+            c = draw.Lines(
+                x_start - 12/14 * size * koef, y_start,
+                x_start-size*koef - 12/14 * size * koef, y_start,
+                stroke='black'
+            )
+            d.append(c)
+        while x_start < (width + x) * koef:
+            gneisses_speck(d, x_start, y_start, size)
+            x_start += delta_x
+        i += 1
+        if i % 2 == 1:
+            delta -= (delta_x/2)/koef
+        else:
+            delta += (delta_x/2)/koef
+
+        y_start -= delta_y
