@@ -6,13 +6,18 @@ from format import frmt
 _, _, koef = frmt('a4')
 
 
-# добавленные типы отложений: пески, суглинки, супеси, глины, известняки, мергели, песчаники,
+# добавленные типы отложений: пески (крупные, средние,мелкие),
+# суглинки, супеси, глины, известняки, мергели, песчаники,
 # доломиты, мел, гнейсы, граниты
 def speck(d, x, y, width, height, sediments):
     height = height/len(sediments)
     for elem in sediments:
-        if elem == 'пески':
-            sands(d, x, y, width, height)
+        if 'пески' in elem:
+            if len(elem) > 6:
+                type = elem[elem.find(' ') + 1:]
+            else:
+                type = 'средние'
+            sands(d, x, y, width, height, type)
         elif elem == 'глины':
             clays(d, x, y, width, height)
         elif elem == 'известняки':
@@ -40,19 +45,26 @@ def speck(d, x, y, width, height, sediments):
 
 
 # пески
-def sands(d, x, y, width, height):
+def sands(d, x, y, width, height, type):
+    # выбор типа песков
+    if type == 'крупные':
+       size = 0.3
+    if type == 'средние':
+        size = 0.2
+    if type == 'мелкие':
+        size = 0.1
     # смещение по горизонтали, вертикали, изменение смещения по горизонтали
-    delta_x = 3*koef
-    delta_y = 2*koef
+    delta_x = 3*koef * (size * 5)
+    delta_y = 2*koef * (size * 5)
     delta = 0
-    indent = 1
+    indent = 0.4
     i = 1
     # стартовые значения
     y_start = (y - indent) * koef
     while y_start > (y - height + indent) * koef:
         x_start = (x + delta + indent) * koef
-        while x_start < (width + x - indent) * koef:
-            c = draw.Circle(x_start, y_start, 0.2*koef, fill='black')
+        while x_start < (width + x) * koef:
+            c = draw.Circle(x_start, y_start, size*koef, fill='black')
             d.append(c)
             x_start += delta_x
         i += 1

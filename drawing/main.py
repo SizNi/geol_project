@@ -123,6 +123,7 @@ def rectangle(d, x, y, x1, y1, text, direction):
         step = y1 / number_str
         text_start_step = 0
         text_step = round(len(text)/abs(number_str))
+        text_end_step = text_step
         # ввод строк внутрь квадрата
         # -1 нужен чтоб не было проблем с выходом за пределы итератора
         # из-за округления
@@ -131,24 +132,31 @@ def rectangle(d, x, y, x1, y1, text, direction):
                            (x+x1)*koef, (y+step+1)*koef,
                            close=False,
                            stroke='white')
-            if str(text[text_step-1]) == ',':
-                insert = str(text[text_start_step:text_step])
+            if str(text[text_end_step-1]) == ',':
+                insert = str(text[text_start_step:text_end_step])
+                print(f'{insert}tt')
                 d.append(
                     draw.Text([insert], 40, path=p, text_anchor='middle'))
-            elif str(text[text_step-1]) == ' ':
-                insert = str(text[text_start_step:text_step])
+                print(text_start_step, text_end_step)
+            elif str(text[text_end_step-1]) == ' ':
+                insert = str(text[text_start_step:text_end_step-1])
+                print(f'{insert}probel')
+                print(text[text_end_step]+'plo')
                 d.append(
                     draw.Text([insert], 40, path=p, text_anchor='middle'))
+                print(text_start_step, text_end_step)
             else:
-                insert = str(text[text_start_step:text_step]) + '-'
+                insert = str(text[text_start_step:text_end_step]) + '-'
+                print(f'{insert}+---')
                 d.append(
                     draw.Text([insert], 40, path=p, text_anchor='middle'))
-
+                print(text_start_step, text_end_step)
+            #print(number_str, i)
             # смещение относительно первоначальной строки
             y += -5
             i += 1
-            text_start_step = text_step
-            text_step += text_step
+            text_start_step += text_step
+            text_end_step += text_step
         # добавление остатка строки
         p = draw.Lines((x)*koef, (y+step+1)*koef,
                        (x+x1)*koef, (y+step+1)*koef,
@@ -351,7 +359,7 @@ def well(d, well_dt):
 
 well_data = {
     'layers': {
-        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('супеси', 'пески', 'гнейсы', 'граниты')},
+        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('пески мелкие', 'пески средние', 'пески крупные', 'граниты')},
         2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': ('известняки', 'супеси', 'доломиты')},
         3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('пески', 'известняки', 'доломиты')},
         4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('граниты',)}
