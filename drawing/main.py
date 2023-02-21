@@ -134,24 +134,16 @@ def rectangle(d, x, y, x1, y1, text, direction):
                            stroke='white')
             if str(text[text_end_step-1]) == ',':
                 insert = str(text[text_start_step:text_end_step])
-                print(f'{insert}tt')
                 d.append(
                     draw.Text([insert], 40, path=p, text_anchor='middle'))
-                print(text_start_step, text_end_step)
             elif str(text[text_end_step-1]) == ' ':
                 insert = str(text[text_start_step:text_end_step-1])
-                print(f'{insert}probel')
-                print(text[text_end_step]+'plo')
                 d.append(
                     draw.Text([insert], 40, path=p, text_anchor='middle'))
-                print(text_start_step, text_end_step)
             else:
                 insert = str(text[text_start_step:text_end_step]) + '-'
-                print(f'{insert}+---')
                 d.append(
                     draw.Text([insert], 40, path=p, text_anchor='middle'))
-                print(text_start_step, text_end_step)
-            #print(number_str, i)
             # смещение относительно первоначальной строки
             y += -5
             i += 1
@@ -199,8 +191,13 @@ def layers(d, well_depth, dt):
         layer_fill = colour(data[i]['name'])
         rectangle(d, x_start, y_start, 30, -
                   data[i]['thick']*scale_m, layer_fill, 'f')
-        speck(d, x_start, y_start, 30,
-              data[i]['thick']*scale_m, data[i]['sediments'])
+        # добавление прослоев
+        if 'interlayers' in data[i]:
+            speck(d, x_start, y_start, 30,
+                data[i]['thick']*scale_m, data[i]['sediments'], data[i]['interlayers'])
+        else:
+            speck(d, x_start, y_start, 30,
+              data[i]['thick']*scale_m, data[i]['sediments'], None)
         x_start += 30
         # подумать как убрать подписи вниз (к низу прямоугольника)
         rectangle(d, x_start, y_start, 15, -
@@ -359,10 +356,10 @@ def well(d, well_dt):
 
 well_data = {
     'layers': {
-        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('пески мелкие', 'пески средние', 'пески крупные', 'граниты')},
+        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('пески мелкие', 'пески средние', 'пески крупные', 'граниты'), 'interlayers':('глины',)},
         2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': ('известняки', 'супеси', 'доломиты')},
-        3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('пески', 'известняки', 'доломиты')},
-        4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('граниты',)}
+        3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('пески', 'известняки', 'доломиты'), 'interlayers':('глины',)},
+        4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('граниты',), 'interlayers':('глины', 'известняки')}
     },
     'well_data': {
         'columns': {

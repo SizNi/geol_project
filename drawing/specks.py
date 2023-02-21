@@ -9,40 +9,73 @@ _, _, koef = frmt('a4')
 # добавленные типы отложений: пески (крупные, средние,мелкие),
 # суглинки, супеси, глины, известняки, мергели, песчаники,
 # доломиты, мел, гнейсы, граниты
-def speck(d, x, y, width, height, sediments):
+def speck(d, x, y, width, height, sediments, interlayers):
     height = height/len(sediments)
-    for elem in sediments:
-        if 'пески' in elem:
-            if len(elem) > 6:
-                type = elem[elem.find(' ') + 1:]
-            else:
-                type = 'средние'
-            sands(d, x, y, width, height, type)
-        elif elem == 'глины':
-            clays(d, x, y, width, height)
-        elif elem == 'известняки':
-            limestones(d, x, y, width, height)
-        elif elem == 'суглинки':
-            loams(d, x, y, width, height)
-        elif elem == 'мергели':
-            marls(d, x, y, width, height)
-        elif elem == 'супеси':
-            sandy_loams(d, x, y, width, height)
-        elif elem == 'песчаники':
-            sandstones(d, x, y, width, height)
-        elif elem == 'доломиты':
-            dolomites(d, x, y, width, height)
-        elif elem == 'мел':
-            chalk(d, x, y, width, height)
-        elif elem == 'гнейсы':
-            gneisses(d, x, y, width, height)
-        elif elem == 'граниты':            
-            granites(d, x, y, width, height)
-        else:
-            raise ValueError(
-                'Что-то пошло не так. Возможно таких отложений нет')
-        y -= height
+    # если есть прослои:
+    if interlayers:
+        # толщина прослоя в %
+        one_interlayer = 0.15
+        # какую часть слоя (в %) отдадим на прослои
+        interlayers_part = one_interlayer * len(interlayers)
+        for elem in sediments:
+            choose_speck(d, x, y, width, height * (1 - interlayers_part), elem)
+            interlayer_step = height * (1 - interlayers_part)
+            for elem in interlayers:
+               choose_speck(d, x, y - interlayer_step, width, height * one_interlayer, elem)
+               interlayer_step += one_interlayer * height
+            y -= height
+    else:
+        for elem in sediments:
+            choose_speck(d, x, y, width, height, elem)
+            y -= height
+    
 
+        
+# отдельно вынес выбор крапа
+def choose_speck(d, x, y, width, height, elem):
+    if 'пески' in elem:
+        if len(elem) > 6:
+            type = elem[elem.find(' ') + 1:]
+        else:
+            type = 'средние'
+        sands(d, x, y, width, height, type)
+    elif elem == 'глины':
+        clays(d, x, y, width, height)
+    elif elem == 'известняки':
+        limestones(d, x, y, width, height)
+    elif elem == 'суглинки':
+        loams(d, x, y, width, height)
+    elif elem == 'мергели':
+        marls(d, x, y, width, height)
+    elif elem == 'супеси':
+        sandy_loams(d, x, y, width, height)
+    elif elem == 'песчаники':
+        sandstones(d, x, y, width, height)
+    elif elem == 'доломиты':
+        dolomites(d, x, y, width, height)
+    elif elem == 'мел':
+        chalk(d, x, y, width, height)
+    elif elem == 'гнейсы':
+        gneisses(d, x, y, width, height)
+    elif elem == 'граниты':            
+        granites(d, x, y, width, height)
+    else:
+        raise ValueError(
+            'Что-то пошло не так. Возможно таких отложений нет')
+
+
+# задание параметров масштаба для блочных крапов
+def scaling(type):
+    if type == 'stones':
+        # смещение по y
+        delta_y = 2*koef
+        # смещение по x
+        delta_x = 4*delta_y
+        # смещение от строки к строке
+        delta = 0
+        # начальный отступ
+        indent = 0.3
+        return delta_x, delta_y, delta, indent
 
 # пески
 def sands(d, x, y, width, height, type):
@@ -77,8 +110,8 @@ def sands(d, x, y, width, height, type):
 
 # глины
 def clays(d, x, y, width, height):
-    delta_y = 1.5*koef
-    indent = 1
+    delta_y = 1*koef
+    indent = 0.1
     y_start = (y - indent) * koef
     while y_start > (y - height + indent) * koef:
         c = draw.Lines(x*koef, y_start, (x + width) *
@@ -89,12 +122,8 @@ def clays(d, x, y, width, height):
 
 # известняки
 def limestones(d, x, y, width, height):
-    # смещение по горизонтали, вертикали, изменение смещения по горизонтали
-    delta_y = 3*koef
-    delta_x = 4*delta_y
-    delta = 0
-    # начальный отступ
-    indent = 1
+    # начальные значения
+    delta_x, delta_y, delta, indent = scaling('stones')
     i = 0
     # стартовые значения
     y_start = y * koef
@@ -191,12 +220,7 @@ def loams(d, x, y, width, height):
 
 # мергели
 def marls(d, x, y, width, height):
-    # смещение по горизонтали, вертикали, изменение смещения по горизонтали
-    delta_y = 3*koef
-    delta_x = 4*delta_y
-    delta = 0
-    # начальный отступ
-    indent = 1
+    delta_x, delta_y, delta, indent = scaling('stones')
     i = 0
     # стартовые значения
     y_start = y * koef
@@ -309,12 +333,7 @@ def sandy_loams(d, x, y, width, height):
 
 # песчаники
 def sandstones(d, x, y, width, height):
-    # смещение по горизонтали, вертикали, изменение смещения по горизонтали
-    delta_y = 3*koef
-    delta_x = 4*delta_y
-    delta = 0
-    # начальный отступ
-    indent = 1
+    delta_x, delta_y, delta, indent = scaling('stones')
     # шаг между точками внутри крапа
     step = delta_x/5
     i = 0
@@ -385,12 +404,8 @@ def sandstones(d, x, y, width, height):
 
 # доломиты
 def dolomites(d, x, y, width, height):
-    # смещение по горизонтали, вертикали, изменение смещения по горизонтали
-    delta_y = 3 * koef
-    delta_x = 4 * delta_y
-    delta = 0
-    # начальный отступ
-    indent = 1
+    delta_x, delta_y, delta, indent = scaling('stones')
+    indent = 0.6
     # расстояние между палками для крапа
     between = 0.3 * koef
     i = 0

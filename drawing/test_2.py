@@ -1,3 +1,3 @@
-str = 'пески, гнейсы, граниты'
-x = 6
-print(str[1:x])
+x = None
+if x:
+    print(1)
