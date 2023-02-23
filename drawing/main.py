@@ -185,6 +185,8 @@ def layers(d, well_depth, dt):
         x_start += 12
         # преобразование отложений из кортежа в строку для описания разреза
         sediments_text = (', '.join(data[i]['sediments'])).capitalize()
+        if 'interlayers' in data[i]:
+            sediments_text += '. Прослои: ' + ', '.join(data[i]['interlayers'])
         rectangle(d, x_start, y_start, 30, -
                   data[i]['thick']*scale_m, sediments_text, 'h')
         x_start += 30
@@ -356,7 +358,7 @@ def well(d, well_dt):
 
 well_data = {
     'layers': {
-        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('пески мелкие', 'пески средние', 'пески крупные', 'граниты'), 'interlayers':('глины',)},
+        1: {'id': 1, 'name': 'Q', 'thick': 45.0, 'sediments': ('гнейсы', 'пески средние', 'мел', 'граниты'), 'interlayers':('глины',)},
         2: {'id': 2, 'name': 'J\u2083', 'thick': 10, 'sediments': ('известняки', 'супеси', 'доломиты')},
         3: {'id': 3, 'name': 'J\u2083ox-c', 'thick': 15, 'sediments': ('пески', 'известняки', 'доломиты'), 'interlayers':('глины',)},
         4: {'id': 4, 'name': 'C\u2083g-P\u2081a', 'thick': 25, 'sediments': ('граниты',), 'interlayers':('глины', 'известняки')}

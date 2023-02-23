@@ -76,25 +76,41 @@ def scaling(type):
         # начальный отступ
         indent = 0.3
         return delta_x, delta_y, delta, indent
+    elif type == 'sands':
+        delta_x = 3*koef
+        delta_y = 2*koef
+        delta = 0
+        indent = 0.6
+        return delta_x, delta_y, delta, indent
+    # граниты, гнейсы
+    elif type == 'rocks':
+        size = 1.2
+        indent = 0.6
+        delta = 0
+        return size, indent, delta
+    # мел
+    elif type == 'chalk':
+        delta = 3/2*koef
+        return delta
+        
 
 # пески
 def sands(d, x, y, width, height, type):
     # выбор типа песков
     if type == 'крупные':
-       size = 0.3
+       size = 0.2
     if type == 'средние':
-        size = 0.2
+        size = 0.15
     if type == 'мелкие':
         size = 0.1
     # смещение по горизонтали, вертикали, изменение смещения по горизонтали
-    delta_x = 3*koef * (size * 5)
-    delta_y = 2*koef * (size * 5)
-    delta = 0
-    indent = 0.4
+    delta_x, delta_y, delta, indent = scaling('sands')
+    delta_x = delta_x * (size * 5)
+    delta_y = delta_y * (size * 5)
     i = 1
     # стартовые значения
     y_start = (y - indent) * koef
-    while y_start > (y - height + indent) * koef:
+    while y_start > (y - height) * koef:
         x_start = (x + delta + indent) * koef
         while x_start < (width + x) * koef:
             c = draw.Circle(x_start, y_start, size*koef, fill='black')
@@ -464,7 +480,7 @@ def dolomites(d, x, y, width, height):
 # мел
 def chalk(d, x, y, width, height):
     # смещение по горизонтали и вертикали (для мела одинаковое)
-    delta = 3/2*koef
+    delta = scaling('chalk')
     # стартовые значения
     y_start = y * koef - delta
     x_start = x * koef + delta
@@ -525,12 +541,10 @@ def gneisses_speck(d, x, y, size_1):
 # гнейсы
 def gneisses(d, x, y, width, height):
     # масштаб размера
-    size = 2.2
+    size, indent, delta = scaling('rocks')
     # смещение по горизонтали, вертикали, изменение смещения по горизонтали
     delta_x = (40/14) * size * koef + (12/14) * size * koef
     delta_y = 2*koef
-    delta = 0
-    indent = 1
     i = 1
     # стартовые значения
     y_start = (y - indent) * koef
@@ -574,16 +588,14 @@ def granites_speck(d, x, y, size_1, st_width):
 
 def granites(d, x, y, width, height):
     # масштаб размера
-    size = 2.2
+    size, indent, delta = scaling('rocks')
     # смещение по горизонтали, вертикали, изменение смещения по горизонтали
     delta_x = (size + 1.6 * size) * koef
     delta_y = 1.2*size*koef
-    delta = 1.15
-    indent = size/2
     i = 1
     # стартовые значения
     st_width = 3
-    y_start = (y - indent - 1.15) * koef
+    y_start = (y - 2*indent + 0.1) * koef
     while y_start > (y - height + indent) * koef:
         x_start = (x + delta) * koef
         while x_start < (width + x) * koef:
