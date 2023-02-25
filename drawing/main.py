@@ -3,6 +3,7 @@ from index_colours import colour
 from specks import speck
 import math
 from format import frmt
+from fixtures import well_data, well_data_2
 
 # размер листа А4 при плотности пикселей 300 dpi
 
@@ -10,6 +11,7 @@ width, height, koef = frmt("a4")
 
 
 def main(well_data):
+    well_depth = well_data['well_data']['well_depth']
     d = draw.Drawing(width, height, origin=(0, 0), displayInline=False)
     # Подложка
     r = draw.Rectangle(0, 0, 210 * koef, 297 * koef, fill="white", stroke="black")
@@ -20,8 +22,8 @@ def main(well_data):
     )
     d.append(r)
     header(d)
-    scale(d, 95)
-    layers(d, 95, well_data)
+    scale(d, well_depth)
+    layers(d, well_depth, well_data)
     well(d, well_data)
     d.savePng("example.png")
     # почему-то Svg криво работает, половина графики не отображается
@@ -32,10 +34,12 @@ def main(well_data):
 def scaling(well_depth):
     if well_depth <= 50:
         section = 5
-    elif well_depth > 50 and well_depth <= 150:
+    elif well_depth > 50 and well_depth <= 100:
         section = 10
-    else:
+    elif well_depth > 100 and well_depth <= 200:
         section = 20
+    else:
+        section = 30
     section_numbers = round((well_depth + (section / 2)) / section)
     return section, section_numbers
 
@@ -397,18 +401,18 @@ def well(d, well_dt):
             # добавление данных по глубинам
             p = draw.Lines(
                 185.5 * koef,
-                (y_start - column["till"] * scale_m + 2) * koef,
+                (y_start - (column["till"] - column["from"]) * scale_m + 2) * koef,
                 208 * koef,
-                (y_start - column["till"] * scale_m + 2) * koef,
+                (y_start - (column["till"] - column["from"]) * scale_m + 2) * koef,
                 close=False,
                 stroke="white",
             )
             d.append(draw.Text(str(column["till"]), 40, path=p, text_anchor="middle"))
             p = draw.Lines(
                 185.5 * koef,
-                (y_start - column["till"] * scale_m) * koef,
+                (y_start - (column["till"] - column["from"]) * scale_m) * koef,
                 208 * koef,
-                (y_start - column["till"] * scale_m) * koef,
+                (y_start - (column["till"] - column["from"]) * scale_m) * koef,
                 close=False,
                 stroke="black",
             )
@@ -517,59 +521,5 @@ def well(d, well_dt):
         )
 
 
-well_data = {
-    "layers": {
-        1: {
-            "id": 1,
-            "name": "Q",
-            "thick": 45.0,
-            "sediments": ("гнейсы", "пески средние", "мел", "граниты"),
-            "interlayers": ("глины",),
-        },
-        2: {
-            "id": 2,
-            "name": "J\u2083",
-            "thick": 10,
-            "sediments": ("известняки", "супеси", "доломиты"),
-        },
-        3: {
-            "id": 3,
-            "name": "J\u2083ox-c",
-            "thick": 15,
-            "sediments": ("пески", "известняки", "доломиты"),
-            "interlayers": ("глины",),
-        },
-        4: {
-            "id": 4,
-            "name": "C\u2083g-P\u2081a",
-            "thick": 25,
-            "sediments": ("граниты",),
-            "interlayers": ("глины", "известняки"),
-        },
-    },
-    "well_data": {
-        "columns": {
-            1: {"id": 1, "D": 377, "from": 0.0, "till": 34.0, "type": "обсадная"},
-            2: {"id": 2, "D": 273, "from": 0.0, "till": 74.0, "type": "обсадная"},
-            3: {
-                "id": 3,
-                "D": 133,
-                "from": 59.0,
-                "till": 95.0,
-                "type": "фильтровая",
-                "filter": {
-                    1: {"id": 1, "from": 75.0, "till": 79.0},
-                    2: {"id": 2, "from": 85.0, "till": 90.0},
-                },
-            },
-        },
-        "pump_type": "ЭЦВ-6-10-110",
-        "pump_depth": 55.0,
-        "static_lvl": 32.0,
-        "dynamic_lvl": 35.0,
-        "well_depth": 95.0,
-    },
-}
-
 if __name__ == "__main__":
-    main(well_data)
+    main(well_data_2)
