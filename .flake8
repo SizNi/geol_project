@@ -1,6 +1,9 @@
 [flake8]
 ignore =
     E501,
+    W503,
+    N813,
+    E203
 exclude =
     migrations,
     __pycache__,

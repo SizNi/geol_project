@@ -10,10 +10,14 @@ start:
 new_app:
 	#django-admin startapp app_name
 
-# тесты
+# линтеры
 lint:
 	poetry run flake8
 
+black:
+	black .
+
+# тесты
 test:
 	python3 manage.py test
 

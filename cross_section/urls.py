@@ -3,5 +3,5 @@ from cross_section import views
 
 
 urlpatterns = [
-    path('', views.CrossIndexView.as_view(), name='home_cross'),
+    path("", views.CrossIndexView.as_view(), name="home_cross"),
 ]
