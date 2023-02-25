@@ -10,7 +10,7 @@ _, _, koef = frmt('a4')
 # суглинки, супеси, глины, известняки, мергели, песчаники,
 # доломиты, мел, гнейсы, граниты
 def speck(d, x, y, width, height, sediments, interlayers):
-    height = height/len(sediments)
+    height = height / len(sediments)
     # если есть прослои:
     if interlayers:
         # толщина прослоя в %
@@ -21,16 +21,15 @@ def speck(d, x, y, width, height, sediments, interlayers):
             choose_speck(d, x, y, width, height * (1 - interlayers_part), elem)
             interlayer_step = height * (1 - interlayers_part)
             for elem in interlayers:
-               choose_speck(d, x, y - interlayer_step, width, height * one_interlayer, elem)
-               interlayer_step += one_interlayer * height
+                choose_speck(d, x, y - interlayer_step, width, height * one_interlayer, elem)
+                interlayer_step += one_interlayer * height
             y -= height
     else:
         for elem in sediments:
             choose_speck(d, x, y, width, height, elem)
             y -= height
-    
 
-        
+
 # отдельно вынес выбор крапа
 def choose_speck(d, x, y, width, height, elem):
     if 'пески' in elem:
@@ -57,7 +56,7 @@ def choose_speck(d, x, y, width, height, elem):
         chalk(d, x, y, width, height)
     elif elem == 'гнейсы':
         gneisses(d, x, y, width, height)
-    elif elem == 'граниты':            
+    elif elem == 'граниты':
         granites(d, x, y, width, height)
     else:
         raise ValueError(
@@ -68,17 +67,17 @@ def choose_speck(d, x, y, width, height, elem):
 def scaling(type):
     if type == 'stones':
         # смещение по y
-        delta_y = 2*koef
+        delta_y = 2 * koef
         # смещение по x
-        delta_x = 4*delta_y
+        delta_x = 4 * delta_y
         # смещение от строки к строке
         delta = 0
         # начальный отступ
         indent = 0.3
         return delta_x, delta_y, delta, indent
     elif type == 'sands':
-        delta_x = 3*koef
-        delta_y = 2*koef
+        delta_x = 3 * koef
+        delta_y = 2 * koef
         delta = 0
         indent = 0.6
         return delta_x, delta_y, delta, indent
@@ -90,15 +89,15 @@ def scaling(type):
         return size, indent, delta
     # мел
     elif type == 'chalk':
-        delta = 3/2*koef
+        delta = 3 / 2 * koef
         return delta
-        
+
 
 # пески
 def sands(d, x, y, width, height, type):
     # выбор типа песков
     if type == 'крупные':
-       size = 0.2
+        size = 0.2
     if type == 'средние':
         size = 0.15
     if type == 'мелкие':
@@ -113,7 +112,7 @@ def sands(d, x, y, width, height, type):
     while y_start > (y - height) * koef:
         x_start = (x + delta + indent) * koef
         while x_start < (width + x) * koef:
-            c = draw.Circle(x_start, y_start, size*koef, fill='black')
+            c = draw.Circle(x_start, y_start, size * koef, fill='black')
             d.append(c)
             x_start += delta_x
         i += 1
@@ -126,11 +125,11 @@ def sands(d, x, y, width, height, type):
 
 # глины
 def clays(d, x, y, width, height):
-    delta_y = 1*koef
+    delta_y = 1 * koef
     indent = 0.1
     y_start = (y - indent) * koef
     while y_start > (y - height + indent) * koef:
-        c = draw.Lines(x*koef, y_start, (x + width) *
+        c = draw.Lines(x * koef, y_start, (x + width) *
                        koef, y_start, stroke='black')
         d.append(c)
         y_start -= delta_y
@@ -145,7 +144,7 @@ def limestones(d, x, y, width, height):
     y_start = y * koef
     x_start = (x + indent) * koef
     while y_start > (y - height) * koef:
-        c = draw.Lines(x*koef, y_start, (x + width) *
+        c = draw.Lines(x * koef, y_start, (x + width) *
                        koef, y_start, stroke='black')
         d.append(c)
         while x_start < (width + x - indent) * koef:
@@ -165,9 +164,9 @@ def limestones(d, x, y, width, height):
         i += 1
         # смещение начальной точки
         if i % 2 == 0:
-            delta -= delta_x/2
+            delta -= delta_x / 2
         else:
-            delta += delta_x/2
+            delta += delta_x / 2
         # обнуление начальной точки + смещение
         x_start = (x + indent) * koef + delta
         y_start -= delta_y
@@ -175,10 +174,10 @@ def limestones(d, x, y, width, height):
 
 # суглинки
 def loams(d, x, y, width, height):
-    delta_y = 5*koef
+    delta_y = 5 * koef
     # угол наклона
     alpha = 30
-    tg_30 = math.tan((math.pi/180)*alpha)
+    tg_30 = math.tan((math.pi / 180) * alpha)
     delta_x = tg_30 * delta_y
     y_start = y * koef
     x_start = x * koef
@@ -186,8 +185,8 @@ def loams(d, x, y, width, height):
     # движемся по левой грани вниз, по верхней грани вправо
     while y_start >= (y - height) * koef + delta_y and x_start <= (x + width) * koef:
         c = draw.Lines(
-            x*koef, y_start - delta_y,
-            x_start + delta_x, y*koef,
+            x * koef, y_start - delta_y,
+            x_start + delta_x, y * koef,
             stroke='black',
         )
         d.append(c)
@@ -196,37 +195,37 @@ def loams(d, x, y, width, height):
     # в зависимости от высоты и ширины получается два варианта:
     if width >= height:  # ширина больше высоты
         # переназначаем начальные значения
-        x_low_start = ((y-height)*koef - y_start) * tg_30 + delta_x
+        x_low_start = ((y - height) * koef - y_start) * tg_30 + delta_x
         # движемся по верхней грани вправо, по нижней грани - тоже вправо
         while x_start <= (x + width) * koef - delta_x and x * koef + x_low_start <= (x + width) * koef:
             c = draw.Lines(
                 x * koef + x_low_start, (y - height) * koef,
-                x_start + delta_x, y*koef,
+                x_start + delta_x, y * koef,
                 stroke='black'
             )
             d.append(c)
             x_low_start += delta_x
             x_start += delta_x
         y_right_start = delta_y - \
-            (delta_x - (x_start + delta_x - (x+width)*koef))/tg_30
+            (delta_x - (x_start + delta_x - (x + width) * koef)) / tg_30
     else:  # высота больше ширины
         y_right_start = delta_y - \
-            (delta_x - (x_start + delta_x - (x+width)*koef))/tg_30
-        while y_start >= (y-height) * koef + delta_y:
+            (delta_x - (x_start + delta_x - (x + width) * koef)) / tg_30
+        while y_start >= (y - height) * koef + delta_y:
             c = draw.Lines(
                 x * koef, y_start - delta_y,
-                (x + width) * koef, y*koef - y_right_start,
+                (x + width) * koef, y * koef - y_right_start,
                 stroke='black'
             )
             d.append(c)
             y_start -= delta_y
             y_right_start += delta_y
-        x_low_start = ((y-height)*koef - y_start) * tg_30 + delta_x
+        x_low_start = ((y - height) * koef - y_start) * tg_30 + delta_x
     # движемя по правой грани вниз, по нижней грани - вправо
     while y * koef - y_right_start >= (y - height) * koef and x * koef + x_low_start <= (x + width) * koef and x * koef + x_low_start >= x * koef:
         c = draw.Lines(
-            x*koef + x_low_start, (y - height) * koef,
-            (x + width)*koef, y*koef - y_right_start,
+            x * koef + x_low_start, (y - height) * koef,
+            (x + width) * koef, y * koef - y_right_start,
             stroke='black'
         )
         d.append(c)
@@ -242,7 +241,7 @@ def marls(d, x, y, width, height):
     y_start = y * koef
     x_start = (x + indent) * koef
     while y_start > (y - height) * koef:
-        c = draw.Lines(x*koef, y_start, (x + width) *
+        c = draw.Lines(x * koef, y_start, (x + width) *
                        koef, y_start, stroke='black')
         d.append(c)
         while x_start < (width + x - indent) * koef:
@@ -260,7 +259,7 @@ def marls(d, x, y, width, height):
                 # остаток от delta_y
                 y_min = delta_y + ((i + 1) * delta_y - height * koef)
                 # поправка смещения (вместо +1 и -1)
-                new_d = (delta_y - y_min) * (2 * koef/delta_y)
+                new_d = (delta_y - y_min) * (2 * koef / delta_y)
                 # y2 - как раз смещение минус разница, вылезающая за пределы
                 c = draw.Lines(x_start + 1 * koef, y_start,
                                x_start - 1 * koef + new_d, y_start - y_min,
@@ -271,9 +270,9 @@ def marls(d, x, y, width, height):
         i += 1
         # смещение начальной точки
         if i % 2 == 0:
-            delta -= delta_x/2
+            delta -= delta_x / 2
         else:
-            delta += delta_x/2
+            delta += delta_x / 2
         # обнуление начальной точки + смещение
         x_start = (x + indent) * koef + delta
         y_start -= delta_y
@@ -283,11 +282,11 @@ def marls(d, x, y, width, height):
 def sandy_loams(d, x, y, width, height):
     # параметры штриховки
     line_black = 24
-    line_white = line_black/3
-    delta_y = 5*koef
+    line_white = line_black / 3
+    delta_y = 5 * koef
     # угол наклона
     alpha = 30
-    tg_30 = math.tan((math.pi/180)*alpha)
+    tg_30 = math.tan((math.pi / 180) * alpha)
     delta_x = tg_30 * delta_y
     y_start = y * koef
     x_start = x * koef
@@ -295,8 +294,8 @@ def sandy_loams(d, x, y, width, height):
     # движемся по левой грани вниз, по верхней грани вправо
     while y_start >= (y - height) * koef + delta_y and x_start <= (x + width) * koef:
         c = draw.Lines(
-            x*koef, y_start - delta_y,
-            x_start + delta_x, y*koef,
+            x * koef, y_start - delta_y,
+            x_start + delta_x, y * koef,
             stroke='black',
             stroke_dasharray=f'{line_black}, {line_white}',
         )
@@ -306,12 +305,12 @@ def sandy_loams(d, x, y, width, height):
     # в зависимости от высоты и ширины получается два варианта:
     if width >= height:  # ширина больше высоты
         # переназначаем начальные значения
-        x_low_start = ((y-height)*koef - y_start) * tg_30 + delta_x
+        x_low_start = ((y - height) * koef - y_start) * tg_30 + delta_x
         # движемся по верхней грани вправо, по нижней грани - тоже вправо
         while x_start <= (x + width) * koef - delta_x and x * koef + x_low_start <= (x + width) * koef:
             c = draw.Lines(
                 x * koef + x_low_start, (y - height) * koef,
-                x_start + delta_x, y*koef,
+                x_start + delta_x, y * koef,
                 stroke='black',
                 stroke_dasharray=f'{line_black}, {line_white}',
             )
@@ -319,26 +318,26 @@ def sandy_loams(d, x, y, width, height):
             x_low_start += delta_x
             x_start += delta_x
         y_right_start = delta_y - \
-            (delta_x - (x_start + delta_x - (x+width)*koef))/tg_30
+            (delta_x - (x_start + delta_x - (x + width) * koef)) / tg_30
     else:  # высота больше ширины
         y_right_start = delta_y - \
-            (delta_x - (x_start + delta_x - (x+width)*koef))/tg_30
-        while y_start >= (y-height) * koef + delta_y:
+            (delta_x - (x_start + delta_x - (x + width) * koef)) / tg_30
+        while y_start >= (y - height) * koef + delta_y:
             c = draw.Lines(
                 x * koef, y_start - delta_y,
-                (x + width) * koef, y*koef - y_right_start,
+                (x + width) * koef, y * koef - y_right_start,
                 stroke='black',
                 stroke_dasharray=f'{line_black}, {line_white}',
             )
             d.append(c)
             y_start -= delta_y
             y_right_start += delta_y
-        x_low_start = ((y-height)*koef - y_start) * tg_30 + delta_x
+        x_low_start = ((y - height) * koef - y_start) * tg_30 + delta_x
     # движемя по правой грани вниз, по нижней грани - вправо
     while y * koef - y_right_start >= (y - height) * koef and x * koef + x_low_start <= (x + width) * koef and x * koef + x_low_start >= x * koef:
         c = draw.Lines(
-            x*koef + x_low_start, (y - height) * koef,
-            (x + width)*koef, y*koef - y_right_start,
+            x * koef + x_low_start, (y - height) * koef,
+            (x + width) * koef, y * koef - y_right_start,
             stroke='black',
             stroke_dasharray=f'{line_black}, {line_white}',
         )
@@ -351,34 +350,34 @@ def sandy_loams(d, x, y, width, height):
 def sandstones(d, x, y, width, height):
     delta_x, delta_y, delta, indent = scaling('stones')
     # шаг между точками внутри крапа
-    step = delta_x/5
+    step = delta_x / 5
     i = 0
     # стартовые значения
     y_start = y * koef
     x_start = (x + indent) * koef
     while y_start > (y - height) * koef:
-        c = draw.Lines(x*koef, y_start, (x + width) *
+        c = draw.Lines(x * koef, y_start, (x + width) *
                        koef, y_start, stroke='black')
         d.append(c)
         if delta != 0:
             c = draw.Circle(x_start - step, y_start -
-                            delta_y/2, 0.2*koef, fill='black')
+                            delta_y / 2, 0.2 * koef, fill='black')
             d.append(c)
             c = draw.Circle(x_start - step * 2, y_start -
-                            delta_y/2, 0.2*koef, fill='black')
+                            delta_y / 2, 0.2 * koef, fill='black')
             d.append(c)
         while x_start < (width + x - indent) * koef:
             if (i + 1) * delta_y <= height * koef:
-                c = draw.Lines(x_start - 0.5*koef, y_start, x_start + 0.5*koef,
+                c = draw.Lines(x_start - 0.5 * koef, y_start, x_start + 0.5 * koef,
                                y_start - delta_y, stroke='black')
                 d.append(c)
-                c = draw.Lines(x_start + 0.5*koef, y_start, x_start - 0.5*koef,
+                c = draw.Lines(x_start + 0.5 * koef, y_start, x_start - 0.5 * koef,
                                y_start - delta_y, stroke='black')
                 d.append(c)
                 # отрисовка точек
                 for n in range(1, 5):
-                    c = draw.Circle(x_start + step*n, y_start -
-                                    delta_y/2, 0.2*koef, fill='black')
+                    c = draw.Circle(x_start + step * n, y_start -
+                                    delta_y / 2, 0.2 * koef, fill='black')
                     d.append(c)
                 x_start += delta_x
             # следующий цикл нужен, чтоб обрезать вертикальные линии,
@@ -387,32 +386,32 @@ def sandstones(d, x, y, width, height):
                 # остаток от delta_y
                 y_min = delta_y - ((i + 1) * delta_y - height * koef)
                 # поправка смещения (вместо +1 и -1)
-                new_d = (delta_y - y_min) * (1 * koef/delta_y)
+                new_d = (delta_y - y_min) * (1 * koef / delta_y)
                 # y2 - как раз смещение минус разница, вылезающая за пределы
                 c = draw.Lines(
-                    x_start - 0.5*koef, y_start,
-                    x_start + 0.5*koef - new_d, y_start - y_min,
+                    x_start - 0.5 * koef, y_start,
+                    x_start + 0.5 * koef - new_d, y_start - y_min,
                     stroke='black'
                 )
                 d.append(c)
                 c = draw.Lines(
-                    x_start + 0.5*koef, y_start,
-                    x_start - 0.5*koef + new_d, y_start - y_min,
+                    x_start + 0.5 * koef, y_start,
+                    x_start - 0.5 * koef + new_d, y_start - y_min,
                     stroke='black'
                 )
                 d.append(c)
-                if delta_y/2 < y_min:
+                if delta_y / 2 < y_min:
                     for n in range(1, 5):
-                        c = draw.Circle(x_start + step*n, y_start -
-                                        delta_y/2, 0.2*koef, fill='black')
+                        c = draw.Circle(x_start + step * n, y_start -
+                                        delta_y / 2, 0.2 * koef, fill='black')
                         d.append(c)
                 x_start += delta_x
         i += 1
         # смещение начальной точки
         if i % 2 == 0:
-            delta -= delta_x/2
+            delta -= delta_x / 2
         else:
-            delta += delta_x/2
+            delta += delta_x / 2
         # обнуление начальной точки + смещение
         x_start = (x + indent) * koef + delta
         y_start -= delta_y
@@ -429,7 +428,7 @@ def dolomites(d, x, y, width, height):
     y_start = y * koef
     x_start = (x + indent) * koef
     while y_start > (y - height) * koef:
-        c = draw.Lines(x*koef, y_start, (x + width) *
+        c = draw.Lines(x * koef, y_start, (x + width) *
                        koef, y_start, stroke='black')
         d.append(c)
         while x_start < (width + x - indent) * koef:
@@ -469,9 +468,9 @@ def dolomites(d, x, y, width, height):
         i += 1
         # смещение начальной точки
         if i % 2 == 0:
-            delta -= delta_x/2
+            delta -= delta_x / 2
         else:
-            delta += delta_x/2
+            delta += delta_x / 2
         # обнуление начальной точки + смещение
         x_start = (x + indent) * koef + delta
         y_start -= delta_y
@@ -487,7 +486,7 @@ def chalk(d, x, y, width, height):
     # горизонтальная штриховка
     while y_start > (y - height) * koef:
         c = draw.Lines(
-            x*koef, y_start,
+            x * koef, y_start,
             (x + width) * koef, y_start,
             stroke='black'
         )
@@ -496,8 +495,8 @@ def chalk(d, x, y, width, height):
     # вертикальная штриховка
     while x_start < (x + width) * koef:
         c = draw.Lines(
-            x_start, y*koef,
-            x_start, (y-height) * koef,
+            x_start, y * koef,
+            x_start, (y - height) * koef,
             stroke='black'
         )
         d.append(c)
@@ -506,33 +505,33 @@ def chalk(d, x, y, width, height):
 
 # единичный крап гнейсов
 def gneisses_speck(d, x, y, size_1):
-    size_2 = (6/14) * size_1
+    size_2 = (6 / 14) * size_1
     c = draw.Lines(
         x, y,
-        x+size_1*koef, y,
+        x + size_1 * koef, y,
         stroke='black'
     )
     d.append(c)
-    x += size_1*koef
+    x += size_1 * koef
     c = draw.Lines(
         x, y,
-        x+size_2*koef, y-size_2*koef,
+        x + size_2 * koef, y - size_2 * koef,
         stroke='black'
     )
     d.append(c)
-    x += size_2*koef
-    y -= size_2*koef
+    x += size_2 * koef
+    y -= size_2 * koef
     c = draw.Lines(
         x, y,
-        x+size_2*koef, y+size_2*koef,
+        x + size_2 * koef, y + size_2 * koef,
         stroke='black'
     )
     d.append(c)
-    x += size_2*koef
-    y += size_2*koef
+    x += size_2 * koef
+    y += size_2 * koef
     c = draw.Lines(
         x, y,
-        x+size_1*koef, y,
+        x + size_1 * koef, y,
         stroke='black'
     )
     d.append(c)
@@ -543,8 +542,8 @@ def gneisses(d, x, y, width, height):
     # масштаб размера
     size, indent, delta = scaling('rocks')
     # смещение по горизонтали, вертикали, изменение смещения по горизонтали
-    delta_x = (40/14) * size * koef + (12/14) * size * koef
-    delta_y = 2*koef
+    delta_x = (40 / 14) * size * koef + (12 / 14) * size * koef
+    delta_y = 2 * koef
     i = 1
     # стартовые значения
     y_start = (y - indent) * koef
@@ -552,8 +551,8 @@ def gneisses(d, x, y, width, height):
         x_start = (x + delta) * koef
         if i % 2 != 1:
             c = draw.Lines(
-                x_start - 12/14 * size * koef, y_start,
-                x_start-size*koef - 12/14 * size * koef, y_start,
+                x_start - 12 / 14 * size * koef, y_start,
+                x_start - size * koef - 12 / 14 * size * koef, y_start,
                 stroke='black'
             )
             d.append(c)
@@ -562,13 +561,15 @@ def gneisses(d, x, y, width, height):
             x_start += delta_x
         i += 1
         if i % 2 == 1:
-            delta -= (delta_x/2)/koef
+            delta -= (delta_x / 2) / koef
         else:
-            delta += (delta_x/2)/koef
+            delta += (delta_x / 2) / koef
 
         y_start -= delta_y
 
 # единичный крап гранитов
+
+
 def granites_speck(d, x, y, size_1, st_width):
     c = draw.Lines(
         x, y,
@@ -578,8 +579,8 @@ def granites_speck(d, x, y, size_1, st_width):
     )
     d.append(c)
     c = draw.Lines(
-        x + size_1*koef / 2, y + size_1 * koef / 2,
-        x + size_1*koef / 2, y - size_1 * koef / 2,
+        x + size_1 * koef / 2, y + size_1 * koef / 2,
+        x + size_1 * koef / 2, y - size_1 * koef / 2,
         stroke='black',
         stroke_width=f'{st_width}',
     )
@@ -591,11 +592,11 @@ def granites(d, x, y, width, height):
     size, indent, delta = scaling('rocks')
     # смещение по горизонтали, вертикали, изменение смещения по горизонтали
     delta_x = (size + 1.6 * size) * koef
-    delta_y = 1.2*size*koef
+    delta_y = 1.2 * size * koef
     i = 1
     # стартовые значения
     st_width = 3
-    y_start = (y - 2*indent + 0.1) * koef
+    y_start = (y - 2 * indent + 0.1) * koef
     while y_start > (y - height + indent) * koef:
         x_start = (x + delta) * koef
         while x_start < (width + x) * koef:
@@ -603,9 +604,9 @@ def granites(d, x, y, width, height):
             x_start += delta_x
         i += 1
         if i % 2 == 1:
-            delta -= (delta_x/2)/koef
+            delta -= (delta_x / 2) / koef
             st_width += 2
         else:
-            delta += (delta_x/2)/koef
+            delta += (delta_x / 2) / koef
             st_width -= 2
         y_start -= delta_y

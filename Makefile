@@ -11,6 +11,9 @@ new_app:
 	#django-admin startapp app_name
 
 # тесты
+lint:
+	poetry run flake8
+
 test:
 	python3 manage.py test
 
