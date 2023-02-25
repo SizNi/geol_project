@@ -1,0 +1,27 @@
+name: GitHub Actions
+run-name: ${{ github.actor }}, GA working
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+    steps:
+      
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          pip install poetry
+          make install
+      - name: Run Linter
+        run: make lint
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - run: echo "🍏 This job's status is ${{ job.status }}."
