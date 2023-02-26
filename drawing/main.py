@@ -3,7 +3,9 @@ from index_colours import colour
 from specks import speck
 import math
 from format import frmt
-from fixtures import well_data_1, well_data_2
+from fixtures import well_data_2
+
+# from fixtures import well_data_1
 
 # размер листа А4 при плотности пикселей 300 dpi
 
@@ -165,7 +167,7 @@ def rectangle(d, x, y, x1, y1, text, direction):
         # Первоначальное положение строки
         # строится в зависимости от расстояния межу строками
         # и высотой шрифта
-        step = y1 / 2 + (5-2.5)/2 * number_str
+        step = y1 / 2 + (5 - 2.5) / 2 * number_str
         text_start_step = 0
         text_step = round(len(text) / abs(number_str))
         text_end_step = text_step
@@ -182,23 +184,23 @@ def rectangle(d, x, y, x1, y1, text, direction):
                 stroke="white",
             )
             # коррекция конца строки
-            if str(text[text_end_step+1]) == ',':
-                insert = str(text[text_start_step:text_end_step+1])
-            elif str(text[text_end_step]) == ' ':
-                insert = str(text[text_start_step:text_end_step-1])
-            elif str(text[text_end_step-1]) == ' ':
-                insert = str(text[text_start_step:text_end_step-1])
-            elif str(text[text_end_step]) == ',':
-                insert = str(text[text_start_step:text_end_step+1])
+            if str(text[text_end_step + 1]) == ",":
+                insert = str(text[text_start_step : text_end_step + 1])
+            elif str(text[text_end_step]) == " ":
+                insert = str(text[text_start_step : text_end_step - 1])
+            elif str(text[text_end_step - 1]) == " ":
+                insert = str(text[text_start_step : text_end_step - 1])
+            elif str(text[text_end_step]) == ",":
+                insert = str(text[text_start_step : text_end_step + 1])
             else:
                 insert = str(text[text_start_step:text_end_step]) + "-"
             # коррекция начала строки
-            if str(text[text_start_step]) == ',':
+            if str(text[text_start_step]) == ",":
                 insert = insert[2:]
-            elif str(text[text_start_step]) == ' ':
+            elif str(text[text_start_step]) == " ":
                 insert = insert[1:]
             d.append(draw.Text([insert], 40, path=p, text_anchor="middle"))
-            #print(f'{insert}!')
+            # print(f'{insert}!')
             # смещение относительно первоначальной строки
             y += -5
             i += 1
@@ -213,10 +215,10 @@ def rectangle(d, x, y, x1, y1, text, direction):
             close=False,
             stroke="white",
         )
-        if str(text[text_start_step]) == ',':
-            insert = text[text_start_step+2:]
-        elif str(text[text_start_step]) == ' ':
-            insert = text[text_start_step+1:]
+        if str(text[text_start_step]) == ",":
+            insert = text[text_start_step + 2 :]
+        elif str(text[text_start_step]) == " ":
+            insert = text[text_start_step + 1 :]
         else:
             insert = text[text_start_step:]
         d.append(draw.Text([insert], 40, path=p, text_anchor="middle"))
@@ -559,4 +561,4 @@ def well(d, well_dt):
 
 
 if __name__ == "__main__":
-    main(well_data_1)
+    main(well_data_2)
