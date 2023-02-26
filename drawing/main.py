@@ -3,7 +3,7 @@ from index_colours import colour
 from specks import speck
 import math
 from format import frmt
-from fixtures import well_data, well_data_2
+from fixtures import well_data_1, well_data_2
 
 # размер листа А4 при плотности пикселей 300 dpi
 
@@ -11,7 +11,7 @@ width, height, koef = frmt("a4")
 
 
 def main(well_data):
-    well_depth = well_data['well_data']['well_depth']
+    well_depth = well_data["well_data"]["well_depth"]
     d = draw.Drawing(width, height, origin=(0, 0), displayInline=False)
     # Подложка
     r = draw.Rectangle(0, 0, 210 * koef, 297 * koef, fill="white", stroke="black")
@@ -106,7 +106,7 @@ def scale(d, well_depth):
 
 # создание прямоугольника с текстом
 def rectangle(d, x, y, x1, y1, text, direction):
-    # f - заливать, h - с горизонтальным текстом, v - вертикальным
+    # f - заливать, h - с горизонтальным текстом, v - вертикальным, h_low - горизонтальный по низу
     # заготовка для добавления заливки
     if direction == "f":
         r = draw.Rectangle(
@@ -118,8 +118,13 @@ def rectangle(d, x, y, x1, y1, text, direction):
         )
     d.append(r)
     # создание переноса строки если надо
-    if direction != "f" and (len(text) <= x1 / 2.1 or direction == "v"):
+    if (
+        direction != "f"
+        and (len(text) <= x1 / 2.1 or direction == "v")
+        and direction != "h_low"
+    ):
         # расположение текста в завимости от ориентации текста
+
         if direction == "v":
             p = draw.Lines(
                 (x + x1 / 2 + 1) * koef,
@@ -139,6 +144,17 @@ def rectangle(d, x, y, x1, y1, text, direction):
                 stroke="white",
             )
         d.append(draw.Text([text], 40, path=p, text_anchor="middle"))
+    elif direction == "h_low":
+        p = draw.Lines(
+            (x) * koef,
+            (y + y1 + 2) * koef,
+            (x + x1) * koef,
+            (y + y1 + 2) * koef,
+            close=False,
+            stroke="white",
+        )
+        d.append(draw.Text([text], 40, path=p, text_anchor="middle"))
+
     elif direction == "h":
         number_str = math.ceil(abs((len(text) * 2.1) / x1))
         i = 0
@@ -264,7 +280,7 @@ def layers(d, well_depth, dt):
             15,
             -data[i]["thick"] * scale_m,
             str(format(h_start, ".1f")),
-            "h",
+            "h_low",
         )
         x_start += 15
         h_start += data[i]["thick"]
@@ -275,7 +291,7 @@ def layers(d, well_depth, dt):
             15,
             -data[i]["thick"] * scale_m,
             str(format(h_start, ".1f")),
-            "h",
+            "h_low",
         )
         x_start += 15
         rectangle(
@@ -285,7 +301,7 @@ def layers(d, well_depth, dt):
             15,
             -data[i]["thick"] * scale_m,
             str(format(data[i]["thick"], ".1f")),
-            "h",
+            "h_low",
         )
         y_start -= data[i]["thick"] * scale_m
         i += 1

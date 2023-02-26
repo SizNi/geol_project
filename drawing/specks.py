@@ -642,6 +642,7 @@ def granites_speck(d, x, y, size_1, st_width):
     d.append(c)
 
 
+# граниты
 def granites(d, x, y, width, height):
     # масштаб размера
     size, indent, delta = scaling("rocks")
