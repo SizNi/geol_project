@@ -38,8 +38,12 @@ def scaling(well_depth):
         section = 10
     elif well_depth > 100 and well_depth <= 200:
         section = 20
-    else:
+    elif well_depth > 200 and well_depth <= 300:
         section = 30
+    elif well_depth > 300 and well_depth <= 400:
+        section = 40
+    elif well_depth > 400 and well_depth <= 500:
+        section = 50
     section_numbers = round((well_depth + (section / 2)) / section)
     return section, section_numbers
 
@@ -175,15 +179,24 @@ def rectangle(d, x, y, x1, y1, text, direction):
                 close=False,
                 stroke="white",
             )
-            if str(text[text_end_step - 1]) == ",":
-                insert = str(text[text_start_step:text_end_step])
-                d.append(draw.Text([insert], 40, path=p, text_anchor="middle"))
-            elif str(text[text_end_step - 1]) == " ":
-                insert = str(text[text_start_step : text_end_step - 1])
-                d.append(draw.Text([insert], 40, path=p, text_anchor="middle"))
+            # коррекция конца строки
+            if str(text[text_end_step+1]) == ',':
+                insert = str(text[text_start_step:text_end_step+1])
+            elif str(text[text_end_step]) == ' ':
+                insert = str(text[text_start_step:text_end_step-1])
+            elif str(text[text_end_step-1]) == ' ':
+                insert = str(text[text_start_step:text_end_step-1])
+            elif str(text[text_end_step]) == ',':
+                insert = str(text[text_start_step:text_end_step+1])
             else:
                 insert = str(text[text_start_step:text_end_step]) + "-"
-                d.append(draw.Text([insert], 40, path=p, text_anchor="middle"))
+            # коррекция начала строки
+            if str(text[text_start_step]) == ',':
+                insert = insert[2:]
+            elif str(text[text_start_step]) == ' ':
+                insert = insert[1:]
+            d.append(draw.Text([insert], 40, path=p, text_anchor="middle"))
+            #print(f'{insert}!')
             # смещение относительно первоначальной строки
             y += -5
             i += 1
@@ -198,7 +211,13 @@ def rectangle(d, x, y, x1, y1, text, direction):
             close=False,
             stroke="white",
         )
-        d.append(draw.Text([text[text_start_step:]], 40, path=p, text_anchor="middle"))
+        if str(text[text_start_step]) == ',':
+            insert = text[text_start_step+2:]
+        elif str(text[text_start_step]) == ' ':
+            insert = text[text_start_step+1:]
+        else:
+            insert = text[text_start_step:]
+        d.append(draw.Text([insert], 40, path=p, text_anchor="middle"))
 
 
 # создание слоя

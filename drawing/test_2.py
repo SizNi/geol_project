@@ -1,3 +1,2 @@
-x = None
-if x:
-    print(1)
+x = 'привет,'
+print(str(x[:7]))
