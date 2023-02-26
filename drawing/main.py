@@ -163,7 +163,9 @@ def rectangle(d, x, y, x1, y1, text, direction):
         number_str = math.ceil(abs((len(text) * 2.1) / x1))
         i = 0
         # Первоначальное положение строки
-        step = y1 / number_str
+        # строится в зависимости от расстояния межу строками
+        # и высотой шрифта
+        step = y1 / 2 + (5-2.5)/2 * number_str
         text_start_step = 0
         text_step = round(len(text) / abs(number_str))
         text_end_step = text_step
@@ -173,9 +175,9 @@ def rectangle(d, x, y, x1, y1, text, direction):
         while i < number_str - 1:
             p = draw.Lines(
                 (x) * koef,
-                (y + step + 1) * koef,
+                (y + step) * koef,
                 (x + x1) * koef,
-                (y + step + 1) * koef,
+                (y + step) * koef,
                 close=False,
                 stroke="white",
             )
@@ -205,9 +207,9 @@ def rectangle(d, x, y, x1, y1, text, direction):
         # добавление остатка строки
         p = draw.Lines(
             (x) * koef,
-            (y + step + 1) * koef,
+            (y + step) * koef,
             (x + x1) * koef,
-            (y + step + 1) * koef,
+            (y + step) * koef,
             close=False,
             stroke="white",
         )
