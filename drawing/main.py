@@ -1,9 +1,11 @@
 import drawSvg as draw
-from index_colours import colour
+from index_colours import colour, convertation
 from specks import speck
 import math
 from format import frmt
 from fixtures import well_data_2
+
+# from fixtures import well_data_3
 
 # from fixtures import well_data_1
 
@@ -12,8 +14,8 @@ from fixtures import well_data_2
 width, height, koef = frmt("a4")
 
 
-def main(well_data):
-    well_depth = well_data["well_data"]["well_depth"]
+def main(well_dt):
+    well_depth = well_dt["well_data"]["well_depth"]
     d = draw.Drawing(width, height, origin=(0, 0), displayInline=False)
     # Подложка
     r = draw.Rectangle(0, 0, 210 * koef, 297 * koef, fill="white", stroke="black")
@@ -25,8 +27,8 @@ def main(well_data):
     d.append(r)
     header(d)
     scale(d, well_depth)
-    layers(d, well_depth, well_data)
-    well(d, well_data)
+    layers(d, well_depth, well_dt)
+    well(d, well_dt)
     d.savePng("example.png")
     # почему-то Svg криво работает, половина графики не отображается
     # d.saveSvg('example_svg.svg')
@@ -60,7 +62,7 @@ def header(d):
     rectangle(d, 10, 297 - 15, 12, -25, "Масштаб", "v")
     rectangle(d, 22, 297 - 15, 12, -25, "№ слоя", "v")
     rectangle(d, 34, 297 - 15, 12, -25, "Возраст", "v")
-    rectangle(d, 46, 297 - 15, 30, -25, "Описание пород", "h")
+    rectangle(d, 46, 297 - 15, 30, -25, "Описание     пород", "h")
     rectangle(d, 76, 297 - 15, 30, -25, "Разрез   скважины", "h")
     rectangle(d, 106, 297 - 15, 45, -10, "Залегание слоя, м", "h")
     rectangle(d, 106, 297 - 25, 15, -15, "От", "h")
@@ -68,7 +70,7 @@ def header(d):
     rectangle(d, 136, 297 - 25, 15, -15, "Мощность", "h")
     rectangle(d, 151, 297 - 15, 12, -25, "Уровень, м", "v")
     rectangle(d, 163, 297 - 15, 45, -10, "Конструкция скважины", "h")
-    rectangle(d, 163, 297 - 25, 22.5, -15, "Диаметр, мм", "h")
+    rectangle(d, 163, 297 - 25, 22.5, -15, "Диаметр,         мм", "h")
     rectangle(d, 185.5, 297 - 25, 22.5, -15, "Глубина, м", "h")
 
 
@@ -200,7 +202,6 @@ def rectangle(d, x, y, x1, y1, text, direction):
             elif str(text[text_start_step]) == " ":
                 insert = insert[1:]
             d.append(draw.Text([insert], 40, path=p, text_anchor="middle"))
-            # print(f'{insert}!')
             # смещение относительно первоначальной строки
             y += -5
             i += 1
@@ -253,13 +254,15 @@ def layers(d, well_depth, dt):
             direction = "v"
         else:
             direction = "h"
+        # приводим геологический индекс к нужному регистру
+        low_index = convertation(data[i]["name"])
         rectangle(
             d,
             x_start,
             y_start,
             12,
             -data[i]["thick"] * scale_m,
-            data[i]["name"],
+            low_index,
             direction,
         )
         x_start += 12
@@ -271,7 +274,7 @@ def layers(d, well_depth, dt):
             d, x_start, y_start, 30, -data[i]["thick"] * scale_m, sediments_text, "h"
         )
         x_start += 30
-        layer_fill = colour(data[i]["name"])
+        layer_fill = colour(low_index)
         rectangle(d, x_start, y_start, 30, -data[i]["thick"] * scale_m, layer_fill, "f")
         # добавление прослоев
         if "interlayers" in data[i]:
