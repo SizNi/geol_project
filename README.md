@@ -1,5 +1,6 @@
 # Well section
 ![GitHub Actions](https://github.com/SizNi/geol_project/actions/workflows/github-actions.yml/badge.svg)
+![Maintainability](https://api.codeclimate.com/v1/badges/ec3b0a9c956256e29959/maintainability)
 
 Построение вертикального гидрогеологического разреза скважины.
 
