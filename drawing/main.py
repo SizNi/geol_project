@@ -3,9 +3,9 @@ from index_colours import colour, convertation
 from specks import speck
 import math
 from format import frmt
-from fixtures import well_data_2
+from fixtures import well_data_3
 
-# from fixtures import well_data_3
+# from fixtures import well_data_2
 
 # from fixtures import well_data_1
 
@@ -25,9 +25,13 @@ def main(well_dt):
         10 * koef, 7 * koef, 198 * koef, 275 * koef, fill="white", stroke="black"
     )
     d.append(r)
+    # создает заголовки таблиц
     header(d)
+    # создает масштабную линейку
     scale(d, well_depth)
+    # отрисовывает геологические слои
     layers(d, well_depth, well_dt)
+    # отрисовывает все относящиеся к скважине
     well(d, well_dt)
     d.savePng("example.png")
     # почему-то Svg криво работает, половина графики не отображается
@@ -164,7 +168,11 @@ def rectangle(d, x, y, x1, y1, text, direction):
         d.append(draw.Text([text], 40, path=p, text_anchor="middle"))
 
     elif direction == "h":
-        number_str = math.ceil(abs((len(text) * 2.1) / x1))
+        number_str = math.ceil(abs((len(text) * 1.6) / x1))
+        if number_str * 5 >= 0.8 * y1:
+            text_size = 30
+        else:
+            text_size = 40
         i = 0
         # Первоначальное положение строки
         # строится в зависимости от расстояния межу строками
@@ -194,6 +202,8 @@ def rectangle(d, x, y, x1, y1, text, direction):
                 insert = str(text[text_start_step : text_end_step - 1])
             elif str(text[text_end_step]) == ",":
                 insert = str(text[text_start_step : text_end_step + 1])
+            elif str(text[text_end_step]) == ".":
+                insert = str(text[text_start_step : text_end_step + 1])
             else:
                 insert = str(text[text_start_step:text_end_step]) + "-"
             # коррекция начала строки
@@ -201,7 +211,9 @@ def rectangle(d, x, y, x1, y1, text, direction):
                 insert = insert[2:]
             elif str(text[text_start_step]) == " ":
                 insert = insert[1:]
-            d.append(draw.Text([insert], 40, path=p, text_anchor="middle"))
+            elif str(text[text_start_step]) == ".":
+                insert = insert[2:]
+            d.append(draw.Text([insert], text_size, path=p, text_anchor="middle"))
             # смещение относительно первоначальной строки
             y += -5
             i += 1
@@ -220,9 +232,11 @@ def rectangle(d, x, y, x1, y1, text, direction):
             insert = text[text_start_step + 2 :]
         elif str(text[text_start_step]) == " ":
             insert = text[text_start_step + 1 :]
+        elif str(text[text_start_step]) == ".":
+            insert = text[text_start_step + 2 :]
         else:
             insert = text[text_start_step:]
-        d.append(draw.Text([insert], 40, path=p, text_anchor="middle"))
+        d.append(draw.Text([insert], text_size, path=p, text_anchor="middle"))
 
 
 # создание слоя
@@ -564,4 +578,4 @@ def well(d, well_dt):
 
 
 if __name__ == "__main__":
-    main(well_data_2)
+    main(well_data_3)
