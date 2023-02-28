@@ -171,13 +171,18 @@ def rectangle(d, x, y, x1, y1, text, direction):
         number_str = math.ceil(abs((len(text) * 1.6) / x1))
         if number_str * 5 >= 0.8 * y1:
             text_size = 30
+            if number_str == 1:
+                central_koef = 6.2
+            else:
+                central_koef = 3.5
         else:
             text_size = 40
+            central_koef = 2.5
         i = 0
         # Первоначальное положение строки
         # строится в зависимости от расстояния межу строками
         # и высотой шрифта
-        step = y1 / 2 + (5 - 2.5) / 2 * number_str
+        step = y1 / 2 + (5 - central_koef) / 2 * number_str
         text_start_step = 0
         text_step = round(len(text) / abs(number_str))
         text_end_step = text_step
@@ -413,18 +418,38 @@ def well(d, well_dt):
                     "f",
                 )
                 i_f += 1
+        # построение открытого ствола
         elif column["type"] == "О.С.":
-            # надо добавить построение открытого ствола
-            rectangle(
-                d,
-                x_start,
-                y_start,
-                d_start,
-                (column["from"] - column["till"]) * scale_m,
-                "white",
-                "f",
+            r = draw.Rectangle(
+                x_start * koef,
+                y_start * koef,
+                d_start * koef,
+                (column["from"] - column["till"]) * scale_m * koef,
+                fill="white",
+                fill_opacity=0.8,
+                stroke="blue",
+                stroke_dasharray="5, 5",
             )
-            pass
+            d.append(r)
+            p = draw.Lines(
+                163 * koef,
+                (257 - column["till"] * scale_m + 2) * koef,
+                185.5 * koef,
+                (257 - column["till"] * scale_m + 2) * koef,
+                close=False,
+                stroke="black",
+            )
+            text = "О.С. " + str(column["D"])
+            d.append(draw.Text(text, 40, path=p, text_anchor="middle"))
+            p = draw.Lines(
+                185.5 * koef,
+                (257 - column["till"] * scale_m + 2) * koef,
+                208 * koef,
+                (257 - column["till"] * scale_m + 2) * koef,
+                close=False,
+                stroke="white",
+            )
+            d.append(draw.Text(str(column["till"]), 40, path=p, text_anchor="middle"))
         elif column["type"] == "обсадная":
             rectangle(
                 d,
