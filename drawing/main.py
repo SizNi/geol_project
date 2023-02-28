@@ -169,6 +169,7 @@ def rectangle(d, x, y, x1, y1, text, direction):
 
     elif direction == "h":
         number_str = math.ceil(abs((len(text) * 1.6) / x1))
+        # коррекция размера текста (если строк много)
         if number_str * 5 >= 0.8 * y1:
             text_size = 30
             if number_str == 1:

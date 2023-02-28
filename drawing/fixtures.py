@@ -211,7 +211,7 @@ well_data_3 = {
         },
         11: {
             "id": 11,
-            "name": "T2",
+            "name": "T1",
             "thick": 10,
             "sediments": ("доломиты",),
         },
@@ -285,7 +285,7 @@ well_data_3 = {
             },
         },
         "pump_type": "Grundfos SP-15",
-        "pump_depth": 81.0,
+        "pump_depth": 153.0,
         "static_lvl": 110.0,
         "dynamic_lvl": 125.0,
         "well_depth": 190.0,

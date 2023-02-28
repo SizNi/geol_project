@@ -1,4 +1,5 @@
 # Well section
+
 ![GitHub Actions](https://github.com/SizNi/geol_project/actions/workflows/github-actions.yml/badge.svg)
 ![Maintainability](https://api.codeclimate.com/v1/badges/ec3b0a9c956256e29959/maintainability)
 
@@ -18,7 +19,8 @@
 
 ![1677419468970](image/README/1677419468970.png)
 
-
 Пример 2:
 
-![1677419196793](image/README/1677419196793.png)
+![1677419196793](image/README/1677419196793.png)Пример 3:
+
+![1677627980606](image/README/1677627980606.png)
