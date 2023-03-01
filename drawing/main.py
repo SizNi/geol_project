@@ -169,16 +169,16 @@ def rectangle(d, x, y, x1, y1, text, direction):
         d.append(draw.Text([text], 40, path=p, text_anchor="middle"))
 
     elif direction == "h":
-        number_str = math.ceil(abs((len(text) * 1.6) / x1))
+        number_str = math.ceil(abs((len(text) * 2.1) / x1))
         # коррекция размера текста (если строк много)
-        if number_str * 5 >= 0.8 * y1:
+        if number_str * 5 >= - 0.8 * y1:
             text_size = 30
             if number_str == 1:
                 central_koef = 6.2
             else:
-                central_koef = 3.5
+                central_koef = 3
         else:
-            text_size = 40
+            text_size = 35
             central_koef = 2.5
         i = 0
         # Первоначальное положение строки
@@ -207,7 +207,7 @@ def rectangle(d, x, y, x1, y1, text, direction):
                 insert = str(text[text_start_step : text_end_step - 1])
             elif str(text[text_end_step - 1]) == " ":
                 insert = str(text[text_start_step : text_end_step - 1])
-            elif str(text[text_end_step]) == ",":
+            if str(text[text_end_step]) == ",":
                 insert = str(text[text_start_step : text_end_step + 1])
             elif str(text[text_end_step]) == ".":
                 insert = str(text[text_start_step : text_end_step + 1])
