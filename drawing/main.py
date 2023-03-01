@@ -3,9 +3,10 @@ from index_colours import colour, convertation
 from specks import speck
 import math
 from format import frmt
-from fixtures import well_data_3
+from inclusion import inclus
+from fixtures import well_data_2
 
-# from fixtures import well_data_2
+# from fixtures import well_data_3
 
 # from fixtures import well_data_1
 
@@ -290,12 +291,25 @@ def layers(d, well_depth, dt):
         sediments_text = (", ".join(data[i]["sediments"])).capitalize()
         if "interlayers" in data[i]:
             sediments_text += ". Прослои: " + ", ".join(data[i]["interlayers"])
+        # добавление вкраплений
+        if "inclusions" in data[i]:
+            sediments_text += ". Вкрапления: " + ", ".join(data[i]["inclusions"])
         rectangle(
             d, x_start, y_start, 30, -data[i]["thick"] * scale_m, sediments_text, "h"
         )
         x_start += 30
         layer_fill = colour(low_index)
         rectangle(d, x_start, y_start, 30, -data[i]["thick"] * scale_m, layer_fill, "f")
+        # добавление вкраплений
+        if "inclusions" in data[i]:
+            inclus(
+                d,
+                x_start,
+                y_start,
+                30,
+                data[i]["thick"] * scale_m,
+                data[i]["inclusions"],
+            )
         # добавление прослоев
         if "interlayers" in data[i]:
             speck(
@@ -604,4 +618,4 @@ def well(d, well_dt):
 
 
 if __name__ == "__main__":
-    main(well_data_3)
+    main(well_data_2)

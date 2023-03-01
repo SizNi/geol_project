@@ -7,9 +7,7 @@ from format import frmt
 _, _, koef = frmt("a4")
 
 
-# добавленные типы отложений: пески (крупные, средние,мелкие),
-# суглинки, супеси, глины, известняки, мергели, песчаники,
-# доломиты, мел, гнейсы, граниты
+# типы отложений в possible_settings.txt
 def speck(d, x, y, width, height, sediments, interlayers):
     height = height / len(sediments)
     # если есть прослои:
