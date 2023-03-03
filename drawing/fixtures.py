@@ -296,3 +296,58 @@ well_data_3 = {
         "well_depth": 190.0,
     },
 }
+
+well_data_4 = {
+    # данные по слоям
+    "layers": {
+        1: {
+            "id": 1,
+            "name": "Q",
+            "thick": 8.9,
+            "sediments": ("суглинки", "пески средние",),
+            "interlayers": ("глины",),
+        },
+        2: {
+            "id": 2,
+            "name": "J3v+K1a",
+            "thick": 14.0,
+            "sediments": ("пески", "глины",),
+        },
+        3: {
+            "id": 3,
+            "name": "J2-3k-ox",
+            "thick": 12.1,
+            "sediments": ("глины",),
+        },
+        4: {
+            "id": 4,
+            "name": "C3g-P1a",
+            "thick": 35.0,
+            "sediments": (
+                "известняки",
+            ),
+            "interlayers": ("мергели",),
+        },
+    },
+    # данные по скважине
+    "well_data": {
+        "columns": {
+            1: {"id": 1, "D": 219, "from": 0.0, "till": 37.0, "type": "обсадная"},
+            2: {
+                "id": 2,
+                "D": 168,
+                "from": 28.0,
+                "till": 70.0,
+                "type": "фильтровая",
+                "filter": {
+                    1: {"id": 1, "from": 38.0, "till": 54.0},
+                },
+            },
+        },
+        "pump_type": "Belamos",
+        "pump_depth": 27.0,
+        "static_lvl": 8.0,
+        "dynamic_lvl": 10.0,
+        "well_depth": 70.0,
+    },
+}

@@ -258,13 +258,14 @@ def loams(d, x, y, width, height):
 def marls(d, x, y, width, height):
     delta_x, delta_y, delta, indent = scaling("stones")
     i = 0
+    indent = 1
     # стартовые значения
     y_start = y * koef
     x_start = (x + indent) * koef
     while y_start > (y - height) * koef:
         c = draw.Lines(x * koef, y_start, (x + width) * koef, y_start, stroke="black")
         d.append(c)
-        while x_start < (width + x - indent) * koef:
+        while x_start < (width + x) * koef:
             # следующий цикл нужен, чтоб обрезать вертикальные линии,
             # которые могут вылезти за пределы слоя
             if (i + 1) * delta_y <= height * koef:
@@ -278,8 +279,9 @@ def marls(d, x, y, width, height):
                 d.append(c)
                 x_start += delta_x
             else:
+                print(1)
                 # остаток от delta_y
-                y_min = delta_y + ((i + 1) * delta_y - height * koef)
+                y_min = delta_y - ((i + 1) * delta_y - height * koef)
                 # поправка смещения (вместо +1 и -1)
                 new_d = (delta_y - y_min) * (2 * koef / delta_y)
                 # y2 - как раз смещение минус разница, вылезающая за пределы

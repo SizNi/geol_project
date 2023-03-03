@@ -4,7 +4,7 @@ from specks import speck
 import math
 from format import frmt
 from inclusion import inclus
-from fixtures import well_data_2
+from fixtures import well_data_4
 
 # from fixtures import well_data_3
 
@@ -178,7 +178,7 @@ def rectangle(d, x, y, x1, y1, text, direction):
             else:
                 central_koef = 3
         else:
-            text_size = 35
+            text_size = 30
             central_koef = 2.5
         i = 0
         # Первоначальное положение строки
@@ -207,7 +207,7 @@ def rectangle(d, x, y, x1, y1, text, direction):
                 insert = str(text[text_start_step : text_end_step - 1])
             elif str(text[text_end_step - 1]) == " ":
                 insert = str(text[text_start_step : text_end_step - 1])
-            if str(text[text_end_step]) == ",":
+            elif str(text[text_end_step]) == ",":
                 insert = str(text[text_start_step : text_end_step + 1])
             elif str(text[text_end_step]) == ".":
                 insert = str(text[text_start_step : text_end_step + 1])
@@ -618,4 +618,4 @@ def well(d, well_dt):
 
 
 if __name__ == "__main__":
-    main(well_data_2)
+    main(well_data_4)
