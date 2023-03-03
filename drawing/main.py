@@ -4,7 +4,7 @@ from specks import speck
 import math
 from format import frmt
 from inclusion import inclus
-from fixtures import well_data_4
+from fixtures import well_data_2
 
 # from fixtures import well_data_3
 
@@ -618,4 +618,4 @@ def well(d, well_dt):
 
 
 if __name__ == "__main__":
-    main(well_data_4)
+    main(well_data_2)
