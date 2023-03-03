@@ -74,11 +74,12 @@ def boulder(x_start, y_start, size, i):
         angle = f"rotate(10, {x_start}, {y_start})"
     else:
         angle = f"rotate(0, {x_start}, {y_start})"
-    c_1 = draw.Circle(x_start,
+    c_1 = draw.Circle(
+        x_start,
         y_start,
-        0.4*koef,
-        fill = 'black',
-        )
+        0.4 * koef,
+        fill="black",
+    )
     c = draw.Ellipse(
         x_start,
         y_start,
@@ -95,16 +96,16 @@ def boulder(x_start, y_start, size, i):
 # валуны
 def boulders(d, x, y, width, height):
     # размер единичного валуна
-    size = 1/8
+    size = 1 / 8
     # смещение по горизонтали, вертикали, изменение смещения по горизонтали
     delta_x = 60 * size * koef
     delta_y = 30 * size * koef
     delta = 1
     i = 1
     # стартовые значения
-    y_start = (y - delta - 9 * size/2) * koef
-    while y_start > (y - height + 9 * size/2) * koef:
-        x_start = (x + delta + 17 * size/2) * koef
+    y_start = (y - delta - 9 * size / 2) * koef
+    while y_start > (y - height + 9 * size / 2) * koef:
+        x_start = (x + delta + 17 * size / 2) * koef
         while x_start < (width + x) * koef:
             c, c_1 = boulder(x_start, y_start, size, i)
             d.append(c)
