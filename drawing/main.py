@@ -53,7 +53,7 @@ def scaling(well_depth):
         section = 40
     elif well_depth > 400 and well_depth <= 500:
         section = 50
-    section_numbers = round((well_depth + (section / 2)) / section)
+    section_numbers = round((well_depth + (section / 2) - 0.1) / section)
     return section, section_numbers
 
 
@@ -171,7 +171,7 @@ def rectangle(d, x, y, x1, y1, text, direction):
     elif direction == "h":
         number_str = math.ceil(abs((len(text) * 2.1) / x1))
         # коррекция размера текста (если строк много)
-        if number_str * 5 >= - 0.8 * y1:
+        if number_str * 5 >= -0.8 * y1:
             text_size = 30
             if number_str == 1:
                 central_koef = 6.2

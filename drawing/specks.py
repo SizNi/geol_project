@@ -279,7 +279,6 @@ def marls(d, x, y, width, height):
                 d.append(c)
                 x_start += delta_x
             else:
-                print(1)
                 # остаток от delta_y
                 y_min = delta_y - ((i + 1) * delta_y - height * koef)
                 # поправка смещения (вместо +1 и -1)

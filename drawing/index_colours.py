@@ -54,6 +54,7 @@ def colour(index):
 
 # конвертация в нижний регистр индекса
 def convertation(index):
+    text = index
     if len(index) >= 2:
         if index[1].isdigit():
             if int(index[1]) == 1:
@@ -70,5 +71,6 @@ def convertation(index):
                     text = f"{text[0:2]}\u208B\u2082{text[4:]}"
                 elif int(index[3]) == 3:
                     text = f"{text[0:2]}\u208B\u2083{text[4:]}"
-        return text
-    return index
+    text = text.replace("K1", "K\u2081")
+    text = text.replace("P1", "P\u2081")
+    return text

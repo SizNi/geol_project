@@ -304,14 +304,20 @@ well_data_4 = {
             "id": 1,
             "name": "Q",
             "thick": 8.9,
-            "sediments": ("суглинки", "пески средние",),
+            "sediments": (
+                "суглинки",
+                "пески средние",
+            ),
             "interlayers": ("глины",),
         },
         2: {
             "id": 2,
             "name": "J3v+K1a",
             "thick": 14.0,
-            "sediments": ("пески", "глины",),
+            "sediments": (
+                "пески",
+                "глины",
+            ),
         },
         3: {
             "id": 3,
@@ -323,9 +329,7 @@ well_data_4 = {
             "id": 4,
             "name": "C3g-P1a",
             "thick": 35.0,
-            "sediments": (
-                "известняки",
-            ),
+            "sediments": ("известняки",),
             "interlayers": ("мергели",),
         },
     },
