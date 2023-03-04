@@ -69,7 +69,7 @@ def clumps(d, x, y, width, height):
 # единичный валун
 def boulder(x_start, y_start, size, i):
     size = size * koef
-    # угол наклона эллипса
+    # угол наклона эллипса !! поправить
     if i % 2 == 1:
         angle = f"rotate(10, {x_start}, {y_start})"
     else:

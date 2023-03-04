@@ -1,9 +1,92 @@
-import drawSvg as draw
+import json
 
-width = 100
-height = 100
-d = draw.Drawing(width, height, origin=(0, 0), displayInline=False)
-c = draw.Ellipse(50, 50, 20, 15, fill="green", stroke="black", transform="skewY(-30)")
-d.append(c)
+well_data_2 = {
+    # данные по слоям
+    "layers": {
+        1: {
+            "id": 1,
+            "name": "N2",
+            "thick": 45.0,
+            "sediments": ("пески мелкие", "пески средние", "пески крупные"),
+            "interlayers": ("глины",),
+            "inclusions": ("глыбы",),
+        },
+        2: {
+            "id": 2,
+            "name": "N1-2",
+            "thick": 10,
+            "sediments": ("суглинки", "глины", "супеси"),
+            "inclusions": ("глыбы",),
+        },
+        3: {
+            "id": 3,
+            "name": "K1",
+            "thick": 15,
+            "sediments": ("мел", "гнейсы", "граниты"),
+            "interlayers": ("глины",),
+            "inclusions": ("глыбы",),
+        },
+        4: {
+            "id": 4,
+            "name": "T3",
+            "thick": 25,
+            "sediments": (
+                "известняки",
+                "доломиты",
+            ),
+            "interlayers": ("глины",),
+            # "inclusions": ("валуны",),
+        },
+        5: {
+            "id": 5,
+            "name": "T2",
+            "thick": 10,
+            "sediments": (
+                "известняки",
+                "доломиты",
+            ),
+        },
+        6: {
+            "id": 6,
+            "name": "T1kus-kus",
+            "thick": 10,
+            "sediments": (
+                "известняки",
+                "доломиты",
+            ),
+            "inclusions": ("валуны",),
+        },
+    },
+    # данные по скважине
+    "well_data": {
+        "columns": {
+            1: {"id": 1, "D": 377, "from": 0.0, "till": 34.0, "type": "обсадная"},
+            2: {"id": 2, "D": 273, "from": 10.0, "till": 74.0, "type": "обсадная"},
+            3: {"id": 3, "D": 213, "from": 50.0, "till": 96.0, "type": "обсадная"},
+            4: {
+                "id": 4,
+                "D": 133,
+                "from": 88.0,
+                "till": 115.0,
+                "type": "фильтровая",
+                "filter": {
+                    1: {"id": 1, "from": 98.0, "till": 103.0},
+                    2: {"id": 2, "from": 104.0, "till": 109.0},
+                    3: {"id": 3, "from": 112.0, "till": 114.0},
+                },
+            },
+        },
+        "pump_type": "Grundfos SP-15",
+        "pump_depth": 75.0,
+        "static_lvl": 32.0,
+        "dynamic_lvl": 55.0,
+        "well_depth": 115.0,
+    },
+}
 
-d.savePng("example_2.png")
+def convert(data):
+    data = json.dumps(data)
+    new_data = json.loads(data)
+    print(new_data)
+
+convert(well_data_2)
