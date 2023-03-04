@@ -84,9 +84,11 @@ well_data_2 = {
     },
 }
 
+
 def convert(data):
     data = json.dumps(data)
     new_data = json.loads(data)
     print(new_data)
+
 
 convert(well_data_2)
