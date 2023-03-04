@@ -16,6 +16,8 @@ def inclus(d, x, y, width, height, inclusions):
             pebbles(d, x, y, width, height)
         if elem == "щебень":
             gravels(d, x, y, width, height)
+        if elem == "гравий":
+            grits(d, x, y, width, height)
 
 
 # единичная глыба
@@ -206,4 +208,46 @@ def gravels(d, x, y, width, height):
             delta -= 23 * size
         else:
             delta += 23 * size
+        y_start -= delta_y
+
+
+# единичный гравий
+def grit(x_start, y_start, size):
+    size = size * koef
+    c = draw.Circle(
+        x_start,
+        y_start,
+        4 * size,
+        fill="none",
+        stroke="#ababab",
+        stroke_width=2,
+    )
+    return c
+
+
+# гравий
+def grits(d, x, y, width, height):
+    # размер
+    size = 1 / 10
+    # смещение по горизонтали, вертикали, изменение смещения по горизонтали
+    delta_x = 69 * size * koef
+    delta_y = 18 * size * koef
+    delta = 1
+    i = 1
+    # стартовые значения
+    y_start = (y - delta - 4 * size / 2) * koef
+    while y_start > (y - height + 4 * size / 2) * koef:
+        x_start = (x + delta + 4 * size / 2) * koef
+        while x_start < (width + x) * koef:
+            d.append(grit(x_start, y_start, size))
+            x_start += delta_x
+        if i == 1:
+            delta += 18 * size
+            i += 1
+        elif i == 2:
+            delta += 18 * size
+            i += 1
+        else:
+            delta -= 36 * size
+            i = 1
         y_start -= delta_y
