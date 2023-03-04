@@ -136,7 +136,7 @@ def pebbles(d, x, y, width, height):
     i = 1
     # стартовые значения
     y_start = (y - delta - 8 * size / 2) * koef
-    while y_start > (y - height + 9 * size/2) * koef:
+    while y_start > (y - height + 9 * size / 2) * koef:
         x_start = (x + delta + 13 * size / 2) * koef
         while x_start < (width + x) * koef:
             d.append(pebble(x_start, y_start, size))
