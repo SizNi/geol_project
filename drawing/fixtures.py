@@ -95,7 +95,7 @@ well_data_2 = {
                 "доломиты",
             ),
             "interlayers": ("глины",),
-            # "inclusions": ("валуны",),
+            "inclusions": ("щебень",),
         },
         5: {
             "id": 5,

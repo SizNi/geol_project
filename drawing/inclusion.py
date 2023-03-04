@@ -14,6 +14,8 @@ def inclus(d, x, y, width, height, inclusions):
             boulders(d, x, y, width, height)
         if elem == "галька":
             pebbles(d, x, y, width, height)
+        if elem == "щебень":
+            gravels(d, x, y, width, height)
 
 
 # единичная глыба
@@ -134,7 +136,7 @@ def pebbles(d, x, y, width, height):
     i = 1
     # стартовые значения
     y_start = (y - delta - 8 * size / 2) * koef
-    while y_start > (y - height + 9 * size / 2) * koef:
+    while y_start > (y - height + 9 * size/2) * koef:
         x_start = (x + delta + 13 * size / 2) * koef
         while x_start < (width + x) * koef:
             d.append(pebble(x_start, y_start, size))
@@ -144,4 +146,64 @@ def pebbles(d, x, y, width, height):
             delta -= 29 * size
         else:
             delta += 29 * size
+        y_start -= delta_y
+
+
+# единичный щебень
+def gravel(x_start, y_start, size, i):
+    size = size * koef
+    if i % 2 == 1:
+        c = draw.Lines(
+            x_start,
+            y_start,
+            x_start + 15 * size,
+            y_start + 0 * size,
+            x_start + 7.5 * size,
+            y_start - 15 * size,
+            x_start,
+            y_start,
+            close=True,
+            fill="none",
+            stroke="#ababab",
+            stroke_width=3,
+        )
+    else:
+        c = draw.Lines(
+            x_start,
+            y_start,
+            x_start + 15 * size,
+            y_start + 0 * size,
+            x_start + 7.5 * size,
+            y_start + 15 * size,
+            x_start,
+            y_start,
+            close=True,
+            fill="none",
+            stroke="#ababab",
+            stroke_width=3,
+        )
+    return c
+
+
+# щебень
+def gravels(d, x, y, width, height):
+    # размер
+    size = 1 / 5
+    # смещение по горизонтали, вертикали, изменение смещения по горизонтали
+    delta_x = 48 * size * koef
+    delta_y = 30 * size * koef
+    delta = 0.3
+    i = 1
+    # стартовые значения
+    y_start = (y - delta) * koef
+    while y_start > (y - height + 9 * size) * koef:
+        x_start = (x + delta) * koef
+        while x_start < (width + x) * koef:
+            d.append(gravel(x_start, y_start, size, i))
+            x_start += delta_x
+        i += 1
+        if i % 2 == 1:
+            delta -= 23 * size
+        else:
+            delta += 23 * size
         y_start -= delta_y
