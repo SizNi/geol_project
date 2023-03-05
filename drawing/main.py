@@ -170,13 +170,15 @@ def rectangle(d, x, y, x1, y1, text, direction):
 
     elif direction == "h":
         number_str = math.ceil(abs((len(text) * 2.1) / x1))
-        # коррекция размера текста (если строк много)
+        # коррекция размера текста (если строк много),
+        # по хорошему надо доработать динамическую градацию размера
+        # с изменением количества строк в зависимости от размера шрифта
         if number_str * 5 >= -0.8 * y1:
             text_size = 30
             if number_str == 1:
                 central_koef = 6.2
             else:
-                central_koef = 3
+                central_koef = 2
         else:
             text_size = 30
             central_koef = 2.5
@@ -205,6 +207,10 @@ def rectangle(d, x, y, x1, y1, text, direction):
                 text_end_step += 2
                 insert = str(text[text_start_step:text_end_step])
                 text_start_step += 2
+            elif str(text[text_end_step]) == ":":
+                text_end_step += 1
+                insert = str(text[text_start_step:text_end_step])
+                text_start_step += 1
             elif str(text[text_end_step]) == " ":
                 insert = str(text[text_start_step : text_end_step - 1])
             elif str(text[text_end_step - 1]) == " ":
