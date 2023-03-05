@@ -202,7 +202,9 @@ def rectangle(d, x, y, x1, y1, text, direction):
             )
             # коррекция конца строки
             if str(text[text_end_step + 1]) == ",":
-                insert = str(text[text_start_step : text_end_step + 1])
+                text_end_step += 2
+                insert = str(text[text_start_step:text_end_step])
+                text_start_step += 2
             elif str(text[text_end_step]) == " ":
                 insert = str(text[text_start_step : text_end_step - 1])
             elif str(text[text_end_step - 1]) == " ":

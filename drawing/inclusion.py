@@ -18,6 +18,8 @@ def inclus(d, x, y, width, height, inclusions):
             gravels(d, x, y, width, height)
         if elem == "гравий":
             grits(d, x, y, width, height)
+        if elem == "фосфориты":
+            phosphorites(d, x, y, width, height)
 
 
 # единичная глыба
@@ -249,5 +251,58 @@ def grits(d, x, y, width, height):
             i += 1
         else:
             delta -= 36 * size
+            i = 1
+        y_start -= delta_y
+
+
+# единичный фосфорит
+def phosphorite(x_start, y_start, size):
+    size = size * koef
+    x_1 = 15
+    y_1 = 11 * x_1 / 28.4
+    c = draw.Ellipse(
+        x_start,
+        y_start,
+        x_1 * size,
+        y_1 * size,
+        fill="none",
+        stroke="black",
+        stroke_width=2,
+    )
+    b = draw.Ellipse(
+        x_start + 5.6 * size,
+        y_start,
+        (17.2 * x_1 / 28.4) * size,
+        (8.4 * y_1 / 11) * size,
+        fill="black",
+        stroke="black",
+        stroke_width=1,
+    )
+    return c, b
+
+
+# фосфориты
+def phosphorites(d, x, y, width, height):
+    # размер
+    size = 1 / 10
+    # смещение по горизонтали, вертикали, изменение смещения по горизонтали
+    delta_x = 50 * size * koef
+    delta_y = 18 * size * koef
+    delta = 0.5
+    i = 1
+    # стартовые значения
+    y_start = (y - height) * koef + 2 * delta_y
+    while y_start > (y - height + 11 * size / 2) * koef:
+        x_start = (x + delta + 28.4 * size / 2) * koef
+        while x_start < (width + x) * koef:
+            c, b = phosphorite(x_start, y_start, size)
+            d.append(c)
+            d.append(b)
+            x_start += delta_x
+        if i == 1:
+            delta += delta_x / (2 * koef)
+            i += 1
+        else:
+            delta -= delta_x / (2 * koef)
             i = 1
         y_start -= delta_y
