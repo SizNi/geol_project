@@ -4,11 +4,11 @@ from specks import speck
 import math
 from format import frmt
 from inclusion import inclus
-from fixtures import well_data_2
+from fixtures import well_data_1
 
 # from fixtures import well_data_3
 
-# from fixtures import well_data_1
+# from fixtures import well_data_2
 
 # размер листа А4 при плотности пикселей 300 dpi
 
@@ -626,4 +626,4 @@ def well(d, well_dt):
 
 
 if __name__ == "__main__":
-    main(well_data_2)
+    main(well_data_1)
