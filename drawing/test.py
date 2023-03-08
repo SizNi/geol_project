@@ -1,8 +1,7 @@
-x = 3 
-y = 4 
-z = x + y 
-z = z + 1 
-x = y 
-y = 5
-x = z + y + 7
-print(x)
+num = 754
+a = num % 10
+b = (num % 100) // 10
+c = num // 100
+print(a)
+print(b)
+print(c)
