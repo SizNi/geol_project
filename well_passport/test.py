@@ -1,4 +1,4 @@
-from datetime import datetime as dt
+# from datetime import datetime
 from docxtpl import DocxTemplate
 import json
 
@@ -6,7 +6,7 @@ import json
 def filling_pass():
     doc = DocxTemplate("well_passport/fixtures/test_template.docx")
     with open("well_passport/fixtures/test_data.json") as json_file:
-        # data = json.load(json_file)
+        data = json.load(json_file)
         context = {
             "col_labels": ["fruit", "vegetable", "stone", "thing"],
             "tbl_contents": [
@@ -18,8 +18,9 @@ def filling_pass():
                 {"label": "green", "cols": ["guava", "cucumber", "aventurine", "card"]},
             ],
         }
-        # context = data
+
     doc.render(context)
+    context = data
     doc.save("well_passport/results/generated_test.docx")
 
 
