@@ -1,2 +1,2 @@
-k = input().split(':')
+k = input().split(":")
 print(k)
