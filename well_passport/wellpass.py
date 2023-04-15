@@ -1,6 +1,8 @@
 from datetime import datetime
 from docxtpl import DocxTemplate
 import json
+from filter_section import filter_sec
+
 # from drawing.index_colours import convertation
 
 
@@ -19,19 +21,17 @@ def filling_pass():
     # добавляем отложения
     bedding_depth = 0.0
     for elem in data["layers"]:
-        res = ", ".join(
-            map(str, data["layers"][elem]["sediments"])
-        ).capitalize()
+        res = ", ".join(map(str, data["layers"][elem]["sediments"])).capitalize()
         # добавляем прослои
-        if 'interlayers' in data["layers"][elem]:
-            res += '. Прослои: ' + ", ".join(
-            map(str, data["layers"][elem]["interlayers"])
-        )
+        if "interlayers" in data["layers"][elem]:
+            res += ". Прослои: " + ", ".join(
+                map(str, data["layers"][elem]["interlayers"])
+            )
         # добавляем вкрапления
-        if 'inclusions' in data["layers"][elem]:
-            res += '. Вкрапления: ' + ", ".join(
-            map(str, data["layers"][elem]["inclusions"])
-        )
+        if "inclusions" in data["layers"][elem]:
+            res += ". Вкрапления: " + ", ".join(
+                map(str, data["layers"][elem]["inclusions"])
+            )
         data["layers"][elem]["sediments"] = res
         # преобразование мощности отложений во флоат
         data["layers"][elem]["thick"] = float(data["layers"][elem]["thick"])
@@ -39,20 +39,22 @@ def filling_pass():
         bedding_depth += data["layers"][elem]["thick"]
         data["layers"][elem]["bedding_depth"] = bedding_depth
     # строение скважины (колонны, фильтра)
-    columns = data['well_data']['columns']
+    columns = data["well_data"]["columns"]
     # заполняем табличку с обсадными колоннами
     obs = []
-    for elem in columns:       
-        if columns[elem]['type'] == 'обсадная':
+    for elem in columns:
+        if columns[elem]["type"] == "обсадная":
             obs.append(columns[elem])
         else:
-            context['philter'] = columns[elem]
+            context["philter"] = columns[elem]
+            # вызов функции, разбирающей фильтровые части
+            context["philter_parts"] = filter_sec(columns[elem])
+
             # сюда вставить разбор на части фильтровой колонны
-    print(context['philter'])
-    context['obs'] = obs
+    context["obs"] = obs
     context["year_now"] = datetime.now().year
     context["layers"] = list(data["layers"].values())
-    #print(context)
+    # print(context)
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
 
