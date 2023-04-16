@@ -3,6 +3,7 @@ from docxtpl import DocxTemplate
 import json
 from filter_section import filter_sec
 
+
 # from drawing.index_colours import convertation
 
 
@@ -49,12 +50,12 @@ def filling_pass():
             context["philter"] = columns[elem]
             # вызов функции, разбирающей фильтровые части
             context["philter_parts"] = filter_sec(columns[elem])
-
-            # сюда вставить разбор на части фильтровой колонны
     context["obs"] = obs
+    # добавляем цементацию
+    context["cementation"] = data["well_data"]["cementation"]
     context["year_now"] = datetime.now().year
     context["layers"] = list(data["layers"].values())
-    # print(context)
+    print(context["obs"])
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
 

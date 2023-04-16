@@ -1,15 +1,16 @@
 # членение фильтровой колонны на части (надфильтровая, фильтровая, отстойник)
-a = {'id': 4, 'D': 133, 'from': 88.0, 'till': 115.0, 'type': 'фильтровая', 'column_type': 'металл', 'filter': {'1': {'id': 1, 'from': 98.0, 'till': 103.0}, '2': {'id': 2, 'from': 104.0, 'till': 109.0}, '3': {'id': 3, 'from': 112.0, 'till': 114.0}}}
 
 
 def filter_sec(data):
     filter = data["filter"]
     if data["type"] == "О.С.":
-        return [{
-            "type": "Открытый ствол",
-            "from": float(filter['1']["from"]),
-            "till": float(filter['1']["till"]),
-            },]
+        return [
+            {
+                "type": "Открытый ствол",
+                "from": float(filter["1"]["from"]),
+                "till": float(filter["1"]["till"]),
+            },
+        ]
     else:
         res = []
         # интервал фильтровой колонны в целом

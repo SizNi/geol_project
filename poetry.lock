@@ -13,6 +13,29 @@ files = [
 ]
 
 [[package]]
+name = "appscript"
+version = "1.2.2"
+description = "Control AppleScriptable applications from Python."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "appscript-1.2.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:1dff7bae29723752f75f025dc816e59f517437976118eba5d83c51728dbb91ba"},
+    {file = "appscript-1.2.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:9c4ba362361131bbf8666de95bbaaf929d5ae2513255f9d47fb8119b6d8279eb"},
+    {file = "appscript-1.2.2-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:36719a13bf502158765f42e195ec25ec208dc5e774f9776c2cd838ec46f30762"},
+    {file = "appscript-1.2.2-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:9dbe19647c7e8695944c773600b25fffe309640b3e1687a836880d0e7695ac08"},
+    {file = "appscript-1.2.2-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:afa39b88eb569a51f7f861c0c33c721080e49db8b95fdafeaa9f9a2b4d111d00"},
+    {file = "appscript-1.2.2-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:1bf9b81eddd61fb62e5003ea3168f3dd80c97cc2d0ff4511553fea4dab1fce30"},
+    {file = "appscript-1.2.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:bd141cb87cd54813ef19907fb017cc375d245f776e9e7602dc8d559d0e379827"},
+    {file = "appscript-1.2.2-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:1a57ae62e1f2ffdb3d8ddd387a2ba2cc9863994d939307e68ad2fa2f9b24a3dd"},
+    {file = "appscript-1.2.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:fb6bfcaea9fc7b47e36c5594ab863b536a5914bfdf1ff5e8571b8b1d1f877cdd"},
+    {file = "appscript-1.2.2.tar.gz", hash = "sha256:64552e87a6b8fac437951f14dd66370576dd2a311bded2aef041580f82fa2c1f"},
+]
+
+[package.dependencies]
+lxml = ">=4.7.1"
+
+[[package]]
 name = "asgiref"
 version = "3.6.0"
 description = "ASGI specs, helper code, and adapters"
@@ -471,6 +494,23 @@ Django = ">=3.2"
 
 [package.extras]
 tablib = ["tablib"]
+
+[[package]]
+name = "docx2pdf"
+version = "0.1.8"
+description = "Convert docx to pdf on Windows or macOS directly using Microsoft Word (must be installed)."
+category = "main"
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "docx2pdf-0.1.8-py3-none-any.whl", hash = "sha256:00be1401fd486640314e993423a0a1cbdbc21142186f68549d962d505b2e8a12"},
+    {file = "docx2pdf-0.1.8.tar.gz", hash = "sha256:6d2c20f9ad36eec75f4da017dc7a97622946954a6124ca0b11772875fa86fbed"},
+]
+
+[package.dependencies]
+appscript = {version = ">=1.1.0", markers = "sys_platform == \"darwin\""}
+pywin32 = {version = ">=227", markers = "sys_platform == \"win32\""}
+tqdm = ">=4.41.0"
 
 [[package]]
 name = "docxcompose"
@@ -1411,7 +1451,7 @@ files = [
 name = "pywin32"
 version = "305"
 description = "Python for Window Extensions"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 files = [
@@ -1635,6 +1675,27 @@ files = [
 ]
 
 [[package]]
+name = "tqdm"
+version = "4.65.0"
+description = "Fast, Extensible Progress Meter"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "tqdm-4.65.0-py3-none-any.whl", hash = "sha256:c4f53a17fe37e132815abceec022631be8ffe1b9381c2e6e30aa70edc99e9671"},
+    {file = "tqdm-4.65.0.tar.gz", hash = "sha256:1871fb68a86b8fb3b59ca4cdd3dcccbc7e6d613eeed31f4c332531977b89beb5"},
+]
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+
+[package.extras]
+dev = ["py-make (>=0.1.0)", "twine", "wheel"]
+notebook = ["ipywidgets (>=6)"]
+slack = ["slack-sdk"]
+telegram = ["requests"]
+
+[[package]]
 name = "traitlets"
 version = "5.9.0"
 description = "Traitlets Python configuration system"
@@ -1717,4 +1778,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.1"
-content-hash = "3994f9e85f1239934be11e14e14012628fbf22e1b072651e524d4e60c208e12c"
+content-hash = "5aba3597b597b70148910109c9b9dcdfd95e440575c89a430ed7e62eae5a26e5"

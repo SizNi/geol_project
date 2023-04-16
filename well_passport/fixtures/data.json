@@ -150,6 +150,18 @@
                 }
             }
         },
+        "cementation": [
+            {
+                "D": 377,
+                "from": 10.0,
+                "till": 25.0
+            },
+            {
+                "D": 219,
+                "from": 15.0,
+                "till": 40.0
+            }
+        ],
         "project_columns": {
             "1p": {
                 "id": 1,
