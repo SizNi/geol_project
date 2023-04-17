@@ -47,15 +47,14 @@ def filling_pass():
         if columns[elem]["type"] == "обсадная":
             obs.append(columns[elem])
         else:
-            context["philter"] = columns[elem]
+            context["filter"] = columns[elem]
             # вызов функции, разбирающей фильтровые части
-            context["philter_parts"] = filter_sec(columns[elem])
+            context["filter_parts"] = filter_sec(columns[elem])
     context["obs"] = obs
     # добавляем цементацию
     context["cementation"] = data["well_data"]["cementation"]
     context["year_now"] = datetime.now().year
     context["layers"] = list(data["layers"].values())
-    print(context["obs"])
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
 
