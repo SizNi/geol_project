@@ -130,6 +130,8 @@
                 "from": 88.0,
                 "till": 115.0,
                 "type": "фильтровая",
+                "perforation_type": "дырчатая",
+                "wellness": "25",
                 "column_type": "металл",
                 "filter": {
                     "1": {
@@ -162,58 +164,12 @@
                 "till": 40.0
             }
         ],
-        "project_columns": {
-            "1p": {
-                "id": 1,
-                "D": 377,
-                "from": 0.0,
-                "till": 34.0,
-                "type": "обсадная"
-            },
-            "2p": {
-                "id": 2,
-                "D": 273,
-                "from": 10.0,
-                "till": 74.0,
-                "type": "обсадная"
-            },
-            "3p": {
-                "id": 3,
-                "D": 213,
-                "from": 50.0,
-                "till": 96.0,
-                "type": "обсадная"
-            },
-            "4p": {
-                "id": 4,
-                "D": 133,
-                "from": 88.0,
-                "till": 115.0,
-                "type": "фильтровая",
-                "column_type": "металл",
-                "filter": {
-                    "1": {
-                        "id": 1,
-                        "from": 98.0,
-                        "till": 103.0
-                    },
-                    "2": {
-                        "id": 2,
-                        "from": 104.0,
-                        "till": 109.0
-                    },
-                    "3": {
-                        "id": 3,
-                        "from": 112.0,
-                        "till": 114.0
-                    }
-                }
-            }
-        },
         "pump_type": "Grundfos SP-15",
         "pump_depth": 75.0,
         "static_lvl": 32.0,
         "dynamic_lvl": 55.0,
-        "well_depth": 115.0
+        "well_depth": 115.0,
+        "debit": 10.0,
+        "test": "₁"
     }
 }
