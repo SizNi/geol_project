@@ -1,3 +1,3 @@
-a = {'main': False}
-if 'main' in a:
+a = {"main": False}
+if "main" in a:
     print(a)

@@ -5,7 +5,6 @@ from filter_section import filter_sec
 from index_convertation import convertation_doc
 
 
-
 def filling_pass():
     # создаем то, что отправится в док
     context = {}
@@ -38,15 +37,15 @@ def filling_pass():
     for elem in context["layers"]:
         elem["name"] = convertation_doc(elem["name"])
         # определяем основной горизонт
-        if 'main' in elem:
-            context['main_aquifer'] = elem['name']
+        if "main" in elem:
+            context["main_aquifer"] = elem["name"]
             # добавляем отложения основного горизонта
             # print(elem["sediments"])
-            context['main_aquifer_sediments'] = ", ".join(map(str, elem["sediments"]))
-            context['ma_from'] = elem_depth
-            context['ma_till'] = elem_depth + elem['thick']
+            context["main_aquifer_sediments"] = ", ".join(map(str, elem["sediments"]))
+            context["ma_from"] = elem_depth
+            context["ma_till"] = elem_depth + elem["thick"]
         # получаем кровлю следующего горизонта
-        elem_depth += elem['thick']
+        elem_depth += elem["thick"]
     # преобразует все компоненты отложений в единую строку (отложения, прослои, вкрапления)
     # добавляем отложения
     bedding_depth = 0.0
@@ -93,13 +92,13 @@ def filling_pass():
         data["well_data"]["dynamic_lvl"] - data["well_data"]["static_lvl"], 2
     )
     # добавление информации по ЗСО если она есть
-    if 'ZSO' in data:
-        context['r1'] = data['ZSO']['r1']
-        context['r2'] = data['ZSO']['r2']
-        context['r3'] = data['ZSO']['r3']
-        context['ZSO_designer'] = data['ZSO']['designer']
+    if "ZSO" in data:
+        context["r1"] = data["ZSO"]["r1"]
+        context["r2"] = data["ZSO"]["r2"]
+        context["r3"] = data["ZSO"]["r3"]
+        context["ZSO_designer"] = data["ZSO"]["designer"]
     else:
-        context['r1'] = False
+        context["r1"] = False
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
 
