@@ -5,8 +5,6 @@ from filter_section import filter_sec
 from index_convertation import convertation_doc
 
 
-# from drawing.index_colours import convertation
-
 
 def filling_pass():
     # создаем то, что отправится в док
@@ -19,6 +17,36 @@ def filling_pass():
     context["well_location"] = (
         context["region"] + ", " + context["district"] + " г.о., " + context["location"]
     )
+    # строение скважины (колонны, фильтра)
+    columns = data["well_data"]["columns"]
+    # заполняем табличку с обсадными колоннами
+    obs = []
+    for elem in columns:
+        if columns[elem]["type"] == "обсадная":
+            obs.append(columns[elem])
+        else:
+            context["filter"] = columns[elem]
+            # вызов функции, разбирающей фильтровые части
+            context["filter_parts"] = filter_sec(columns[elem])
+    context["obs"] = obs
+    # добавляем цементацию
+    context["cementation"] = data["well_data"]["cementation"]
+    context["year_now"] = datetime.now().year
+    context["layers"] = list(data["layers"].values())
+    # преобразование индексов в нижний регистр
+    elem_depth = 0
+    for elem in context["layers"]:
+        elem["name"] = convertation_doc(elem["name"])
+        # определяем основной горизонт
+        if 'main' in elem:
+            context['main_aquifer'] = elem['name']
+            # добавляем отложения основного горизонта
+            # print(elem["sediments"])
+            context['main_aquifer_sediments'] = ", ".join(map(str, elem["sediments"]))
+            context['ma_from'] = elem_depth
+            context['ma_till'] = elem_depth + elem['thick']
+        # получаем кровлю следующего горизонта
+        elem_depth += elem['thick']
     # преобразует все компоненты отложений в единую строку (отложения, прослои, вкрапления)
     # добавляем отложения
     bedding_depth = 0.0
@@ -40,25 +68,6 @@ def filling_pass():
         # добавление подошвы пласта
         bedding_depth += data["layers"][elem]["thick"]
         data["layers"][elem]["bedding_depth"] = bedding_depth
-    # строение скважины (колонны, фильтра)
-    columns = data["well_data"]["columns"]
-    # заполняем табличку с обсадными колоннами
-    obs = []
-    for elem in columns:
-        if columns[elem]["type"] == "обсадная":
-            obs.append(columns[elem])
-        else:
-            context["filter"] = columns[elem]
-            # вызов функции, разбирающей фильтровые части
-            context["filter_parts"] = filter_sec(columns[elem])
-    context["obs"] = obs
-    # добавляем цементацию
-    context["cementation"] = data["well_data"]["cementation"]
-    context["year_now"] = datetime.now().year
-    context["layers"] = list(data["layers"].values())
-    for elem in context["layers"]:
-        elem["name"] = convertation_doc(elem["name"])
-    print(context["layers"])
     context["well_depth"] = data["well_data"]["well_depth"]
     # добавление фильтровых интервалов в таблицу
     # по хорошоему надо будет переделать вместе с исходным форматом,
@@ -83,7 +92,14 @@ def filling_pass():
     context["lowering"] = round(
         data["well_data"]["dynamic_lvl"] - data["well_data"]["static_lvl"], 2
     )
-    context["test"] = data["well_data"]["test"]
+    # добавление информации по ЗСО если она есть
+    if 'ZSO' in data:
+        context['r1'] = data['ZSO']['r1']
+        context['r2'] = data['ZSO']['r2']
+        context['r3'] = data['ZSO']['r3']
+        context['ZSO_designer'] = data['ZSO']['designer']
+    else:
+        context['r1'] = False
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
 

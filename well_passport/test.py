@@ -1,3 +1,3 @@
-a = 10
-a = float(a)
-print(a)
+a = {'main': False}
+if 'main' in a:
+    print(a)
