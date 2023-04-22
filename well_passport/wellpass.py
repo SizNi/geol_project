@@ -96,9 +96,17 @@ def filling_pass():
         context["r1"] = data["ZSO"]["r1"]
         context["r2"] = data["ZSO"]["r2"]
         context["r3"] = data["ZSO"]["r3"]
-        context["ZSO_designer"] = data["ZSO"]["designer"]
+        context["zso_designer"] = data["ZSO"]["designer"]
     else:
         context["r1"] = False
+    # добавляем результаты ГИС если они есть
+    if "GIS" in data:
+        context["gis_date"] = data["GIS"]["date"]
+        context["gis_designer"] = data["GIS"]["designer"]
+        context["gis_type"] = data["GIS"]["type"]
+        context["gis_results"] = data["GIS"]["results"]  
+    else:
+        context["gis_date"] = False
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
 
