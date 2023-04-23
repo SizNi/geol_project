@@ -35,6 +35,14 @@
         "results": "Водоприток с нисходящим потоком отмечается с глубины 15,2 и поглощением в интервале 71,1 80,0 м"
 
     },
+    "OFR":{
+        "designer": "ООО 'Мосинжстрой'",
+        "start_date": "14:00, 13.10.2009",
+        "end_date": "14:00, 15.10.2009",
+        "reservoir": 250,
+        "equipment": "Электроуровнемер"
+
+    },
     "layers": {
         "1": {
             "id": 1,
@@ -180,7 +188,9 @@
             }
         ],
         "pump_type": "Grundfos SP-15",
+        "pump_power": 15,
         "pump_depth": 75.0,
+        "pump_column": 42,
         "static_lvl": 32.0,
         "dynamic_lvl": 55.0,
         "well_depth": 115.0,

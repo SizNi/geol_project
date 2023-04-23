@@ -83,9 +83,9 @@ def filling_pass():
     context["static_lvl"] = data["well_data"]["static_lvl"]
     context["debit"] = data["well_data"]["debit"]
     context["ud_debit"] = round(
-        (data["well_data"]["dynamic_lvl"] - data["well_data"]["static_lvl"])
+        data["well_data"]["debit"]
         * 0.278
-        / data["well_data"]["debit"],
+        / (data["well_data"]["dynamic_lvl"] - data["well_data"]["static_lvl"]),
         2,
     )
     context["lowering"] = round(
@@ -104,9 +104,25 @@ def filling_pass():
         context["gis_date"] = data["GIS"]["date"]
         context["gis_designer"] = data["GIS"]["designer"]
         context["gis_type"] = data["GIS"]["type"]
-        context["gis_results"] = data["GIS"]["results"]  
+        context["gis_results"] = data["GIS"]["results"]
     else:
         context["gis_date"] = False
+    # заполняем ОФР
+    if "OFR" in data:
+        context["debit_1"] = round(
+            data["well_data"]["debit"] * 0.278,
+            2,
+        )
+        context["debit_2"] = round(
+            data["well_data"]["debit"] * 24,
+            1,
+        )
+        context["debit_3"] = round(
+            data["well_data"]["debit"]
+            / (data["well_data"]["dynamic_lvl"] - data["well_data"]["static_lvl"]),
+            2,
+        )
+        context["debit_4"] = context["debit_3"] * 24
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
 
