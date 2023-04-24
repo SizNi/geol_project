@@ -3,6 +3,7 @@ from docxtpl import DocxTemplate
 import json
 from filter_section import filter_sec
 from index_convertation import convertation_doc
+from date_convertation import convertation_date
 
 
 def filling_pass():
@@ -123,6 +124,22 @@ def filling_pass():
             2,
         )
         context["debit_4"] = context["debit_3"] * 24
+        context["ofr_reservoir"] = data["OFR"]["reservoir"]
+        context["fill_time"] = round(data["OFR"]["reservoir"] / context["debit_1"], 1)
+        context["ofr_equipment"] = data["OFR"]["equipment"]
+        context["ofr_pump_type"] = data["well_data"]["pump_type"]
+        context["ofr_pump_power"] = data["well_data"]["pump_power"]
+        context["ofr_pump_depth"] = data["well_data"]["pump_depth"]
+        context["ofr_pump_column"] = data["well_data"]["pump_column"]
+        context["ofr_start_date"] = data["OFR"]["start_date"]
+        context["ofr_end_date"] = data["OFR"]["end_date"]
+        # расчет разницы в часах между началом и концом ОФР
+        context["ofr_time"] = convertation_date(
+            data["OFR"]["start_date"], data["OFR"]["end_date"]
+        )
+        context["ofr_designer"] = data["OFR"]["designer"]
+    else:
+        context["ofr_designer"] = False
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
 
