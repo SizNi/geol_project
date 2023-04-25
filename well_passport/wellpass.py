@@ -101,11 +101,14 @@ def filling_pass():
     else:
         context["r1"] = False
     # добавляем результаты ГИС если они есть
+    attouchment = 0
     if "GIS" in data:
         context["gis_date"] = data["GIS"]["date"]
         context["gis_designer"] = data["GIS"]["designer"]
         context["gis_type"] = data["GIS"]["type"]
         context["gis_results"] = data["GIS"]["results"]
+        attouchment += 1
+        context['gis_attouchment'] = attouchment
     else:
         context["gis_date"] = False
     # заполняем ОФР
@@ -140,6 +143,15 @@ def filling_pass():
         context["ofr_designer"] = data["OFR"]["designer"]
     else:
         context["ofr_designer"] = False
+    attouchment += 1
+    context['cross_attouchment'] = attouchment
+    # заполняем анализы если есть
+    if 'analyses' in data:
+        context['analyses'] = data['analyses']
+        attouchment += 1
+        context['analyses_attouchment '] = attouchment
+    else:
+        context['analyses'] = False
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
 
