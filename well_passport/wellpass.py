@@ -9,8 +9,10 @@ from docx.shared import Mm
 import os
 
 # логотип и данные для qr
-path = 'well_passport/fixtures/logo_2.png'
-qr_data = 'https://enhyp.ru/'
+path = "well_passport/fixtures/logo_2.png"
+qr_data = "https://enhyp.ru/"
+
+
 def filling_pass():
     # создаем то, что отправится в док
     context = {}
@@ -21,7 +23,9 @@ def filling_pass():
     # логотип (если его нет - создаем) и qr
     if os.path.exists("well_passport/results/tmplogo.png") is False:
         convertation_logo(path)
-    context["logo"] = InlineImage(doc, "well_passport/results/tmplogo.png", height=Mm(18))
+    context["logo"] = InlineImage(
+        doc, "well_passport/results/tmplogo.png", height=Mm(18)
+    )
     context["qr"] = InlineImage(doc, "well_passport/results/qr.png", height=Mm(20))
     # сложение частей расположения в единый адрес
     context["well_location"] = (
@@ -166,8 +170,8 @@ def filling_pass():
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
     # удаляем измененный логотип (возможно в дальнейшем надо будет конвертировать при его загрузке) и код
-    os.remove('well_passport/results/tmplogo.png')
-    os.remove('well_passport/results/qr.png')
+    os.remove("well_passport/results/tmplogo.png")
+    os.remove("well_passport/results/qr.png")
 
 
 filling_pass()
