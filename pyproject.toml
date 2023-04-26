@@ -21,6 +21,7 @@ black = "^23.1.0"
 flake8 = "^6.0.0"
 docxtpl = "^0.16.6"
 docx2pdf = "^0.1.8"
+qrcode = "^7.4.2"
 
 
 [tool.poetry.group.dev.dependencies]

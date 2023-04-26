@@ -1,11 +1,16 @@
 from datetime import datetime
-from docxtpl import DocxTemplate
+from docxtpl import DocxTemplate, InlineImage
 import json
 from filter_section import filter_sec
 from index_convertation import convertation_doc
 from date_convertation import convertation_date
+from logo_convertation import convertation_logo
+from docx.shared import Mm
+import os
 
-
+# логотип и данные для qr
+path = 'well_passport/fixtures/logo_2.png'
+qr_data = 'https://enhyp.ru/'
 def filling_pass():
     # создаем то, что отправится в док
     context = {}
@@ -13,6 +18,11 @@ def filling_pass():
     with open("well_passport/fixtures/data.json") as json_file:
         data = json.load(json_file)
         context.update(data["main_data"])
+    # логотип (если его нет - создаем) и qr
+    if os.path.exists("well_passport/results/tmplogo.png") is False:
+        convertation_logo(path)
+    context["logo"] = InlineImage(doc, "well_passport/results/tmplogo.png", height=Mm(18))
+    context["qr"] = InlineImage(doc, "well_passport/results/qr.png", height=Mm(20))
     # сложение частей расположения в единый адрес
     context["well_location"] = (
         context["region"] + ", " + context["district"] + " г.о., " + context["location"]
@@ -155,6 +165,9 @@ def filling_pass():
     context["current_date"] = datetime.now().date().strftime("%d.%m.%Y")
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
+    # удаляем измененный логотип (возможно в дальнейшем надо будет конвертировать при его загрузке) и код
+    os.remove('well_passport/results/tmplogo.png')
+    os.remove('well_passport/results/qr.png')
 
 
 filling_pass()
