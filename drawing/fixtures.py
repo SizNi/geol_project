@@ -6,19 +6,19 @@ well_data_1 = {
             "id": 1,
             "name": "Q",
             "thick": 11.0,
-            "sediments": ("суглинки", "супеси"),
+            "sediments": ["суглинки", "супеси"],
         },
         2: {
             "id": 2,
             "name": "J2-3k-ox",
             "thick": 39.0,
-            "sediments": ("глины", "пески мелкие"),
+            "sediments": ["глины", "пески мелкие"],
         },
         3: {
             "id": 3,
             "name": "C2pd-mc",
             "thick": 49.0,
-            "sediments": ("известняки", "глины", "мергели"),
+            "sediments": ["известняки", "глины", "мергели"],
         },
     },
     # данные по скважине
@@ -49,8 +49,8 @@ well_data_1 = {
         },
         "pump_type": "Grundfos SP 77-7",
         "pump_depth": 55.0,
-        "static_lvl": 28.0,
-        "dynamic_lvl": 30.0,
+        "static_lvl": 20.0,
+        "dynamic_lvl": 22.2,
         "well_depth": 100.0,
     },
 }
@@ -298,58 +298,157 @@ well_data_3 = {
 well_data_4 = {
     # данные по слоям
     "layers": {
-        1: {
+        "1": {
             "id": 1,
-            "name": "Q",
-            "thick": 8.9,
-            "sediments": (
-                "суглинки",
+            "name": "N2",
+            "thick": 45.0,
+            "sediments": [
+                "пески мелкие",
                 "пески средние",
-            ),
-            "interlayers": ("глины",),
+                "пески крупные"
+            ],
+            "interlayers": [
+                "глины"
+            ],
+            "inclusions": [
+                "глыбы"
+            ]
         },
-        2: {
+        "2": {
             "id": 2,
-            "name": "J3v+K1a",
-            "thick": 14.0,
-            "sediments": (
-                "пески",
+            "name": "N1-2",
+            "thick": 10,
+            "sediments": [
+                "суглинки",
                 "глины",
-            ),
+                "супеси"
+            ],
+            "inclusions": [
+                "глыбы"
+            ]
         },
-        3: {
+        "3": {
             "id": 3,
-            "name": "J2-3k-ox",
-            "thick": 12.1,
-            "sediments": ("глины",),
+            "name": "K1",
+            "thick": 15,
+            "sediments": [
+                "мел",
+                "гнейсы",
+                "граниты"
+            ],
+            "interlayers": [
+                "глины"
+            ],
+            "inclusions": [
+                "глыбы"
+            ]
         },
-        4: {
+        "4": {
             "id": 4,
-            "name": "C3g-P1a",
-            "thick": 35.0,
-            "sediments": ("известняки",),
-            "interlayers": ("мергели",),
+            "name": "T3",
+            "thick": 25,
+            "sediments": [
+                "известняки",
+                "доломиты"
+            ],
+            "interlayers": [
+                "глины"
+            ]
         },
+        "5": {
+            "id": 5,
+            "name": "T2",
+            "thick": 10,
+            "sediments": [
+                "известняки",
+                "доломиты"
+            ]
+        },
+        "6": {
+            "id": 6,
+            "name": "T1kus-kus",
+            "main": "true",
+            "thick": 10,
+            "sediments": [
+                "известняки",
+                "доломиты"
+            ],
+            "inclusions": [
+                "валуны"
+            ]
+        }
     },
     # данные по скважине
     "well_data": {
         "columns": {
-            1: {"id": 1, "D": 219, "from": 0.0, "till": 37.0, "type": "обсадная"},
-            2: {
-                "id": 2,
-                "D": 168,
-                "from": 28.0,
-                "till": 70.0,
-                "type": "фильтровая",
-                "filter": {
-                    1: {"id": 1, "from": 38.0, "till": 54.0},
-                },
+            "1": {
+                "id": 1,
+                "D": 377,
+                "from": 0.0,
+                "till": 34.0,
+                "type": "обсадная"
             },
+            "2": {
+                "id": 2,
+                "D": 273,
+                "from": 10.0,
+                "till": 74.0,
+                "type": "обсадная"
+            },
+            "3": {
+                "id": 3,
+                "D": 213,
+                "from": 50.0,
+                "till": 96.0,
+                "type": "обсадная"
+            },
+            "4": {
+                "id": 4,
+                "D": 133,
+                "from": 88.0,
+                "till": 115.0,
+                "type": "фильтровая",
+                "perforation_type": "дырчатая",
+                "wellness": "25",
+                "column_type": "металл",
+                "filter": {
+                    "1": {
+                        "id": 1,
+                        "from": 98.0,
+                        "till": 103.0
+                    },
+                    "2": {
+                        "id": 2,
+                        "from": 104.0,
+                        "till": 109.0
+                    },
+                    "3": {
+                        "id": 3,
+                        "from": 112.0,
+                        "till": 114.0
+                    }
+                }
+            }
         },
-        "pump_type": "Belamos",
-        "pump_depth": 27.0,
-        "static_lvl": 8.0,
-        "dynamic_lvl": 10.0,
-        "well_depth": 70.0,
-    },
+        "cementation": [
+            {
+                "D": 377,
+                "from": 10.0,
+                "till": 25.0
+            },
+            {
+                "D": 219,
+                "from": 15.0,
+                "till": 40.0
+            }
+        ],
+        "pump_type": "Grundfos SP-15",
+        "pump_power": 15,
+        "pump_depth": 75.0,
+        "pump_column": 42,
+        "static_lvl": 32.0,
+        "dynamic_lvl": 55.0,
+        "well_depth": 115.0,
+        "debit": 10.0
+    }
 }

@@ -1,10 +1,10 @@
 import drawSvg as draw
-from index_colours import colour, convertation
-from specks import speck
 import math
-from format import frmt
-from inclusion import inclus
-from fixtures import well_data_1
+from drawing.index_colours import colour, convertation
+from drawing.specks import speck
+from drawing.format import frmt
+from drawing.inclusion import inclus
+from drawing.fixtures import well_data_4, well_data_1
 
 # from fixtures import well_data_3
 
@@ -15,7 +15,7 @@ from fixtures import well_data_1
 width, height, koef = frmt("a4")
 
 
-def main(well_dt):
+def main(well_dt, path):
     well_depth = well_dt["well_data"]["well_depth"]
     d = draw.Drawing(width, height, origin=(0, 0), displayInline=False)
     # Подложка
@@ -34,7 +34,7 @@ def main(well_dt):
     layers(d, well_depth, well_dt)
     # отрисовывает все относящиеся к скважине
     well(d, well_dt)
-    d.savePng("example.png")
+    d.savePng(path)
     # почему-то Svg криво работает, половина графики не отображается
     # d.saveSvg('example_svg.svg')
 
@@ -264,70 +264,69 @@ def layers(d, well_depth, dt):
     scale_m = 250 / (section_numbers * section)
     # стартовые положения.
     h_start = 0.0  # глубина
-    i = 1  # индекс в словаре (подумать как организовать передачу данных)
     y_start = 297 - 15 - 25  # смещение по y после добавления заголовков
-    while i in data:
+    for elem in data:
         x_start = 10 + 12
         rectangle(
             d,
             x_start,
             y_start,
             12,
-            -data[i]["thick"] * scale_m,
-            str(data[i]["id"]),
+            -data[elem]["thick"] * scale_m,
+            str(data[elem]["id"]),
             "h",
         )
         x_start += 12
         # ориентация для длинных индексов горизонтов
-        if len(data[i]["name"]) > 3:
+        if len(data[elem]["name"]) > 3:
             direction = "v"
         else:
             direction = "h"
         # приводим геологический индекс к нужному регистру
-        low_index = convertation(data[i]["name"])
+        low_index = convertation(data[elem]["name"])
         rectangle(
             d,
             x_start,
             y_start,
             12,
-            -data[i]["thick"] * scale_m,
+            -data[elem]["thick"] * scale_m,
             low_index,
             direction,
         )
         x_start += 12
         # преобразование отложений из кортежа в строку для описания разреза
-        sediments_text = (", ".join(data[i]["sediments"])).capitalize()
-        if "interlayers" in data[i]:
-            sediments_text += ". Прослои: " + ", ".join(data[i]["interlayers"])
+        sediments_text = (", ".join(data[elem]["sediments"])).capitalize()
+        if "interlayers" in data[elem]:
+            sediments_text += ". Прослои: " + ", ".join(data[elem]["interlayers"])
         # добавление вкраплений
-        if "inclusions" in data[i]:
-            sediments_text += ". Вкрапления: " + ", ".join(data[i]["inclusions"])
+        if "inclusions" in data[elem]:
+            sediments_text += ". Вкрапления: " + ", ".join(data[elem]["inclusions"])
         rectangle(
-            d, x_start, y_start, 30, -data[i]["thick"] * scale_m, sediments_text, "h"
+            d, x_start, y_start, 30, -data[elem]["thick"] * scale_m, sediments_text, "h"
         )
         x_start += 30
         layer_fill = colour(low_index)
-        rectangle(d, x_start, y_start, 30, -data[i]["thick"] * scale_m, layer_fill, "f")
+        rectangle(d, x_start, y_start, 30, -data[elem]["thick"] * scale_m, layer_fill, "f")
         # добавление вкраплений
-        if "inclusions" in data[i]:
+        if "inclusions" in data[elem]:
             inclus(
                 d,
                 x_start,
                 y_start,
                 30,
-                data[i]["thick"] * scale_m,
-                data[i]["inclusions"],
+                data[elem]["thick"] * scale_m,
+                data[elem]["inclusions"],
             )
         # добавление прослоев
-        if "interlayers" in data[i]:
+        if "interlayers" in data[elem]:
             speck(
                 d,
                 x_start,
                 y_start,
                 30,
-                data[i]["thick"] * scale_m,
-                data[i]["sediments"],
-                data[i]["interlayers"],
+                data[elem]["thick"] * scale_m,
+                data[elem]["sediments"],
+                data[elem]["interlayers"],
             )
         else:
             speck(
@@ -335,8 +334,8 @@ def layers(d, well_depth, dt):
                 x_start,
                 y_start,
                 30,
-                data[i]["thick"] * scale_m,
-                data[i]["sediments"],
+                data[elem]["thick"] * scale_m,
+                data[elem]["sediments"],
                 None,
             )
         x_start += 30
@@ -346,18 +345,18 @@ def layers(d, well_depth, dt):
             x_start,
             y_start,
             15,
-            -data[i]["thick"] * scale_m,
+            -data[elem]["thick"] * scale_m,
             str(format(h_start, ".1f")),
             "h_low",
         )
         x_start += 15
-        h_start += data[i]["thick"]
+        h_start += data[elem]["thick"]
         rectangle(
             d,
             x_start,
             y_start,
             15,
-            -data[i]["thick"] * scale_m,
+            -data[elem]["thick"] * scale_m,
             str(format(h_start, ".1f")),
             "h_low",
         )
@@ -367,12 +366,11 @@ def layers(d, well_depth, dt):
             x_start,
             y_start,
             15,
-            -data[i]["thick"] * scale_m,
-            str(format(data[i]["thick"], ".1f")),
+            -data[elem]["thick"] * scale_m,
+            str(format(data[elem]["thick"], ".1f")),
             "h_low",
         )
-        y_start -= data[i]["thick"] * scale_m
-        i += 1
+        y_start -= data[elem]["thick"] * scale_m
         # завершение цикла отрисовки геологии
 
 
@@ -383,9 +381,8 @@ def well(d, well_dt):
     scale_m = 250 / (section_numbers * section)
     # стартовый диаметр внутренней колонны
     d_start = (30 / 2) / (len(data["columns"])) + 2 * len(data["columns"])
-    i = 1
-    while i in data["columns"]:
-        column = data["columns"][i]
+    for elem in data["columns"]:
+        column = data["columns"][elem]
         y_start = 257 - column["from"] * scale_m
         x_start = 76 + (30 - d_start) / 2
         # добавление интервалов фильтра
@@ -420,27 +417,25 @@ def well(d, well_dt):
             )
             d.append(draw.Text(str(column["till"]), 40, path=p, text_anchor="middle"))
             filter = column["filter"]
-            i_f = 1
-            while i_f in filter:
+            for f_elem in filter:
                 # отрисовка градиента фильтра и интервалов
                 gradient = draw.LinearGradient(
                     x_start * koef,
-                    (257 - filter[i_f]["from"] * scale_m) * koef,
+                    (257 - filter[f_elem]["from"] * scale_m) * koef,
                     (x_start + d_start) * koef,
-                    (257 - filter[i_f]["from"] * scale_m) * koef,
+                    (257 - filter[f_elem]["from"] * scale_m) * koef,
                 )
                 gradient.addStop(0, "#bdc4ff", 1)
                 gradient.addStop(1, "#0315b5", 0)
                 rectangle(
                     d,
                     x_start,
-                    257 - filter[i_f]["from"] * scale_m,
+                    257 - filter[f_elem]["from"] * scale_m,
                     d_start,
-                    (filter[i_f]["from"] - filter[i_f]["till"]) * scale_m,
+                    (filter[f_elem]["from"] - filter[f_elem]["till"]) * scale_m,
                     gradient,
                     "f",
                 )
-                i_f += 1
         # построение открытого ствола
         elif column["type"] == "О.С.":
             r = draw.Rectangle(
@@ -522,7 +517,6 @@ def well(d, well_dt):
             )
             d.append(p)
         d_start -= 2
-        i += 1
     # статический уровень
     if well_dt["well_data"]["static_lvl"]:
         st_lvl = well_dt["well_data"]["static_lvl"]
@@ -626,4 +620,5 @@ def well(d, well_dt):
 
 
 if __name__ == "__main__":
-    main(well_data_1)
+    path = "drawing/generated_cross.png"
+    main(well_data_4, path)

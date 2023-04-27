@@ -1,6 +1,6 @@
 import math
 import drawSvg as draw
-from format import frmt
+from drawing.format import frmt
 
 # отрисовка геологических крапов
 # ГОСТ Р 21.302-2021

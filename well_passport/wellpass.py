@@ -5,12 +5,14 @@ from filter_section import filter_sec
 from index_convertation import convertation_doc
 from date_convertation import convertation_date
 from logo_convertation import convertation_logo
+from drawing.main import main as main_cross
 from docx.shared import Mm
 import os
 
-# логотип и данные для qr
+# логотип и данные для qr и разреза
 path = "well_passport/fixtures/logo_2.png"
 qr_data = "https://enhyp.ru/"
+path_cross = "well_passport/results/generated_cross.png"
 
 
 def filling_pass():
@@ -27,6 +29,11 @@ def filling_pass():
         doc, "well_passport/results/tmplogo.png", height=Mm(18)
     )
     context["qr"] = InlineImage(doc, "well_passport/results/qr.png", height=Mm(20))
+    # отправляем данные для разреза
+    cross_data = {}
+    cross_data["layers"] = data["layers"]
+    cross_data["well_data"] = data["well_data"]
+    main_cross(cross_data, path_cross)
     # сложение частей расположения в единый адрес
     context["well_location"] = (
         context["region"] + ", " + context["district"] + " г.о., " + context["location"]
