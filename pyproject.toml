@@ -22,6 +22,11 @@ flake8 = "^6.0.0"
 docxtpl = "^0.16.6"
 docx2pdf = "^0.1.8"
 qrcode = "^7.4.2"
+requests = "^2.29.0"
+mercantile = "^1.2.1"
+py-staticmaps = {extras = ["cairo"], version = "^0.4.0"}
+pillow = "^9.5.0"
+pyproj = "^3.5.0"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -4,7 +4,7 @@ from drawing.index_colours import colour, convertation
 from drawing.specks import speck
 from drawing.format import frmt
 from drawing.inclusion import inclus
-from drawing.fixtures import well_data_4, well_data_1
+from drawing.fixtures import well_data_4
 
 # from fixtures import well_data_3
 
@@ -306,7 +306,9 @@ def layers(d, well_depth, dt):
         )
         x_start += 30
         layer_fill = colour(low_index)
-        rectangle(d, x_start, y_start, 30, -data[elem]["thick"] * scale_m, layer_fill, "f")
+        rectangle(
+            d, x_start, y_start, 30, -data[elem]["thick"] * scale_m, layer_fill, "f"
+        )
         # добавление вкраплений
         if "inclusions" in data[elem]:
             inclus(

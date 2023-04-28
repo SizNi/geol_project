@@ -5,14 +5,16 @@ from filter_section import filter_sec
 from index_convertation import convertation_doc
 from date_convertation import convertation_date
 from logo_convertation import convertation_logo
+from map_convertation import get_map
 from drawing.main import main as main_cross
 from docx.shared import Mm
 import os
 
 # логотип и данные для qr и разреза
-path = "well_passport/fixtures/logo_2.png"
+path = "well_passport/fixtures/logo.png"
 qr_data = "https://enhyp.ru/"
 path_cross = "well_passport/results/generated_cross.png"
+map_path = "well_passport/results/map.png"
 
 
 def filling_pass():
@@ -29,6 +31,15 @@ def filling_pass():
         doc, "well_passport/results/tmplogo.png", height=Mm(18)
     )
     context["qr"] = InlineImage(doc, "well_passport/results/qr.png", height=Mm(20))
+    # добавляем карту и получаем координаты в ГСК 2011
+    coordinates = [float(data["main_data"]["NL"]), float(data["main_data"]["SL"]),]
+    new_coordinates = get_map(coordinates, map_path)
+    context["map"] = InlineImage(
+        doc, map_path, width=Mm(199)
+    )
+    # заменяем координаты в массиве
+    data["main_data"]["NL"] = round(new_coordinates[0], 6)
+    data["main_data"]["SL"] = round(new_coordinates[1], 6)
     # отправляем данные для разреза
     cross_data = {}
     cross_data["layers"] = data["layers"]
@@ -179,6 +190,7 @@ def filling_pass():
     # удаляем измененный логотип (возможно в дальнейшем надо будет конвертировать при его загрузке) и код
     os.remove("well_passport/results/tmplogo.png")
     os.remove("well_passport/results/qr.png")
+    os.remove(map_path)
 
 
 filling_pass()
