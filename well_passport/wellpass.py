@@ -5,6 +5,7 @@ from filter_section import filter_sec
 from index_convertation import convertation_doc
 from date_convertation import convertation_date
 from logo_convertation import convertation_logo
+from convert_to_pdf import doc_to_pdf
 from map_convertation import get_map
 from drawing.main import main as main_cross
 from docx.shared import Mm
@@ -32,11 +33,12 @@ def filling_pass():
     )
     context["qr"] = InlineImage(doc, "well_passport/results/qr.png", height=Mm(20))
     # добавляем карту и получаем координаты в ГСК 2011
-    coordinates = [float(data["main_data"]["NL"]), float(data["main_data"]["SL"]),]
+    coordinates = [
+        float(data["main_data"]["NL"]),
+        float(data["main_data"]["SL"]),
+    ]
     new_coordinates = get_map(coordinates, map_path)
-    context["map"] = InlineImage(
-        doc, map_path, width=Mm(199)
-    )
+    context["map"] = InlineImage(doc, map_path, width=Mm(199))
     # заменяем координаты в массиве
     data["main_data"]["NL"] = round(new_coordinates[0], 6)
     data["main_data"]["SL"] = round(new_coordinates[1], 6)
@@ -191,6 +193,8 @@ def filling_pass():
     os.remove("well_passport/results/tmplogo.png")
     os.remove("well_passport/results/qr.png")
     os.remove(map_path)
+    # конвертируем в пдф (файлБ папка с результатом)
+    doc_to_pdf("well_passport/results/generated_doc.docx", "well_passport/results")
 
 
 filling_pass()
