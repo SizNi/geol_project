@@ -27,6 +27,7 @@ py-staticmaps = {extras = ["cairo"], version = "^0.4.0"}
 pillow = "^9.5.0"
 pyproj = "^3.5.0"
 msoffice2pdf = "^0.0.8"
+pypdf2 = "^3.0.1"
 
 
 [tool.poetry.group.dev.dependencies]

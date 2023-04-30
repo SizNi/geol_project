@@ -136,6 +136,7 @@ def filling_pass():
         context["r1"] = False
     # добавляем результаты ГИС если они есть
     attouchment = 0
+    pril = []
     if "GIS" in data:
         context["gis_date"] = data["GIS"]["date"]
         context["gis_designer"] = data["GIS"]["designer"]
@@ -143,6 +144,7 @@ def filling_pass():
         context["gis_results"] = data["GIS"]["results"]
         attouchment += 1
         context["gis_attouchment"] = attouchment
+        pril.append({"id": attouchment, "name": "Результаты ГИС"})
     else:
         context["gis_date"] = False
     # заполняем ОФР
@@ -179,13 +181,17 @@ def filling_pass():
         context["ofr_designer"] = False
     attouchment += 1
     context["cross_attouchment"] = attouchment
+    pril.append({"id": attouchment, "name": "Геологический разрез скважины"})
     # заполняем анализы если есть
     if "analyses" in data:
         context["analyses"] = data["analyses"]
         attouchment += 1
         context["analyses_attouchment"] = attouchment
+        pril.append({"id": attouchment, "name": "Анализы подземных вод"})
     else:
         context["analyses"] = False
+    # список приложений для оглавления
+    context["pril"] = pril
     context["current_date"] = datetime.now().date().strftime("%d.%m.%Y")
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
