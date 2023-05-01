@@ -1,5 +1,5 @@
 from subprocess import Popen
-import PIL.Image
+import img2pdf
 
 LIBRE_OFFICE = r"/usr/bin/libreoffice"
 
@@ -20,18 +20,19 @@ def doc_to_pdf(input_docx, out_folder):
     p.communicate()
 
 
-def png_to_pdf():
-    im = PIL.Image.open("well_passport/results/generated_cross.png")
-    print(im.size)
-    size = (210, 297)
-    out = im.resize(size)
-    out.save("well_passport/results/generated_cross_2.pdf", "PDF", quality=100)
-    im.save("well_passport/results/generated_cross.pdf", "PDF", quality=100)
-
+def img_to_pdf():
+    a4inpt = (img2pdf.mm_to_pt(210), img2pdf.mm_to_pt(297))
+    layout_fun = img2pdf.get_layout_fun(a4inpt)
+    with open("well_passport/results/generated_cross.pdf", "wb") as f:
+        f.write(
+            img2pdf.convert(
+                "well_passport/results/generated_cross.png", layout_fun=layout_fun
+            )
+        )
 
 
 if __name__ == "__main__":
     sample_doc = "well_passport/results/generated_doc.docx"
     out_folder = "well_passport/results"
     # doc_to_pdf(sample_doc, out_folder)
-    png_to_pdf()
+    # png_to_pdf()

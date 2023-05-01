@@ -5,7 +5,7 @@ from filter_section import filter_sec
 from index_convertation import convertation_doc
 from date_convertation import convertation_date
 from logo_convertation import convertation_logo
-from convert_to_pdf import doc_to_pdf
+from convert_to_pdf import doc_to_pdf, img_to_pdf
 from map_convertation import get_map
 from drawing.main import main as main_cross
 from docx.shared import Mm
@@ -47,6 +47,8 @@ def filling_pass():
     cross_data["layers"] = data["layers"]
     cross_data["well_data"] = data["well_data"]
     main_cross(cross_data, path_cross)
+    # преобразуем разрез в пдф формата А4
+    img_to_pdf()
     # сложение частей расположения в единый адрес
     context["well_location"] = (
         context["region"] + ", " + context["district"] + " г.о., " + context["location"]

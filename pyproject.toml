@@ -28,6 +28,7 @@ pillow = "^9.5.0"
 pyproj = "^3.5.0"
 msoffice2pdf = "^0.0.8"
 pypdf2 = "^3.0.1"
+img2pdf = "^0.4.4"
 
 
 [tool.poetry.group.dev.dependencies]
