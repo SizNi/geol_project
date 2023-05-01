@@ -48,7 +48,10 @@ def filling_pass():
     cross_data["well_data"] = data["well_data"]
     main_cross(cross_data, path_cross)
     # преобразуем разрез в пдф формата А4
-    img_to_pdf("well_passport/results/generated_cross.pdf", "well_passport/results/generated_cross.png")
+    img_to_pdf(
+        "well_passport/results/generated_cross.pdf",
+        "well_passport/results/generated_cross.png",
+    )
     # сложение частей расположения в единый адрес
     context["well_location"] = (
         context["region"] + ", " + context["district"] + " г.о., " + context["location"]

@@ -1,6 +1,6 @@
 import staticmaps
 from PIL import Image, ImageDraw
-from pyproj import CRS, Transformer
+from pyproj import Transformer
 
 
 # получаем карту с расположением
