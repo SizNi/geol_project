@@ -206,7 +206,7 @@ def filling_pass():
         attouchment += 1
         context["analyses_attouchment"] = attouchment
         pril.append({"id": attouchment, "name": "Анализы подземных вод"})
-        merge_dict[attouchment + 1] = "well_passport/results/analyses.pdf"
+        merge_dict[attouchment + 1] = "well_passport/fixtures/analyses.pdf"
         attouchment += 1
     else:
         context["analyses"] = False

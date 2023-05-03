@@ -32,7 +32,7 @@ def img_to_pdf(output, input):
         f.write(img2pdf.convert(input, layout_fun=layout_fun))
 
 
-def bmp_to_png(input, output):
+def bmp_to_png(output, input):
     img = Image.open(input)
     img.save(output, "png")
 
@@ -73,7 +73,7 @@ def gis_to_pdf():
         )
     elif os.path.exists("well_passport/fixtures/gis_2.bmp"):
         bmp_to_png(
-            "well_passport/fixtures/gis_2.bmp", "well_passport/fixtures/gis_2.png"
+            "well_passport/fixtures/gis_2.png", "well_passport/fixtures/gis_2.bmp"
         )
         img_to_pdf(
             "well_passport/fixtures/gis_2.pdf", "well_passport/fixtures/gis_2.png"
