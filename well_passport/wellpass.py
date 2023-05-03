@@ -39,7 +39,7 @@ def filling_pass():
         doc, "well_passport/results/tmplogo.png", height=Mm(18)
     )
     context["qr"] = InlineImage(doc, "well_passport/results/qr.png", height=Mm(20))
-    # добавляем карту и получаем координаты в ГСК 2011
+    # добавляем карту и получаем координаты в ГСК 2011 (конвертим из wgs 84)
     coordinates = [
         float(data["main_data"]["NL"]),
         float(data["main_data"]["SL"]),
@@ -207,16 +207,23 @@ def filling_pass():
         context["analyses_attouchment"] = attouchment
         pril.append({"id": attouchment, "name": "Анализы подземных вод"})
         merge_dict[attouchment + 1] = "well_passport/results/analyses.pdf"
+        attouchment += 1
     else:
         context["analyses"] = False
     # список приложений для оглавления
     context["pril"] = pril
     context["current_date"] = datetime.now().date().strftime("%d.%m.%Y")
+    merge_dict[1] = "well_passport/results/generated_doc.pdf"
+    # чекаем наличие дополнительных приложений. Если есть - добавляем их
+    if data["additional_attouchments"]:
+        for elem in data["additional_attouchments"]:
+            merge_dict[attouchment + 1] = elem["way"]
+            pril.append({"id": attouchment, "name": elem["name"]})
+            attouchment += 1
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
     # конвертируем в пдф (файл, папка с результатом)
     doc_to_pdf("well_passport/results/generated_doc.docx", "well_passport/results")
-    merge_dict[1] = "well_passport/results/generated_doc.pdf"
     pdf_merge(merge_dict, "well_passport/results/result_without_pages.pdf")
     # добавляем номера страниц
     add_page_numbers(

@@ -21,6 +21,16 @@
         "end": "28.12.1995",
         "finishing": "29.12.1995"
     },
+    "additional_attouchments": [
+        {
+            "name": "СРО",
+            "way": "well_passport/fixtures/sro.pdf"
+        },
+        {
+            "name": "Акты",
+            "way": "well_passport/fixtures/acts.pdf"
+        }
+    ],
     "ZSO": {
         "r1": "57.0",
         "r2": "218.0",
