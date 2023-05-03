@@ -5,7 +5,14 @@ from filter_section import filter_sec
 from index_convertation import convertation_doc
 from date_convertation import convertation_date
 from logo_convertation import convertation_logo
-from convert_to_pdf import doc_to_pdf, img_to_pdf, gis_to_pdf, pdf_merge
+from convert_to_pdf import (
+    doc_to_pdf,
+    img_to_pdf,
+    gis_to_pdf,
+    pdf_merge,
+    add_page_numbers,
+)
+from utility import removing
 from map_convertation import get_map
 from drawing.main import main as main_cross
 from docx.shared import Mm
@@ -207,21 +214,17 @@ def filling_pass():
     context["current_date"] = datetime.now().date().strftime("%d.%m.%Y")
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
-    # конвертируем в пдф (файлБ папка с результатом)
+    # конвертируем в пдф (файл, папка с результатом)
     doc_to_pdf("well_passport/results/generated_doc.docx", "well_passport/results")
     merge_dict[1] = "well_passport/results/generated_doc.pdf"
-    pdf_merge(merge_dict, "well_passport/results/result.pdf")
+    pdf_merge(merge_dict, "well_passport/results/result_without_pages.pdf")
+    # добавляем номера страниц
+    add_page_numbers(
+        "well_passport/results/result_without_pages.pdf",
+        "well_passport/results/result.pdf",
+    )
     # удаляем лишнее
-    os.remove("well_passport/results/tmplogo.png")
-    os.remove("well_passport/results/qr.png")
-    os.remove("well_passport/results/generated_cross.png")
-    os.remove("well_passport/results/generated_cross.pdf")
-    os.remove("well_passport/results/generated_doc.docx")
-    os.remove("well_passport/results/generated_doc.pdf")
-    os.remove("well_passport/results/gis.pdf")
-    # анализы пока не удаляем, непонятно что с их конвертацией
-    # os.remove("well_passport/results/analyses.pdf")
-    os.remove(map_path)
+    removing()
 
 
 filling_pass()
