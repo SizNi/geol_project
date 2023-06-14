@@ -2,42 +2,52 @@
 
 
 def filter_sec(data):
-    filter = data["filter"]
+    filters = data["filter"]
+    result = []
+
     if data["type"] == "О.С.":
-        return [
+        # Для типа "О.С." добавляем только одну часть - открытый ствол
+        result.append(
             {
                 "type": "Открытый ствол",
-                "from": float(filter["1"]["from"]),
-                "till": float(filter["1"]["till"]),
-            },
-        ]
+                "from": float(filters["1"]["from"]),
+                "till": float(filters["1"]["till"]),
+            }
+        )
     else:
-        res = []
-        # интервал фильтровой колонны в целом
-        frm = float(data["from"])
-        tll = float(data["till"])
-        # добавление надфильтровой и фильтровой части
-        for elem in filter:
-            if frm != float(filter[elem]["from"]):
-                res.append(
+        # Для остальных типов
+        frm = float(data["from"])  # Начальная точка фильтровой колонны
+        tll = float(data["till"])  # Конечная точка фильтровой колонны
+
+        for elem in filters:
+            if frm != float(filters[elem]["from"]):
+                # Добавляем надфильтровую часть, если есть разрыв
+                result.append(
                     {
                         "type": "глухая надфильтровая часть",
                         "from": frm,
-                        "till": float(filter[elem]["from"]),
+                        "till": float(filters[elem]["from"]),
                     }
                 )
-                frm = float(filter[elem]["till"])
-            res.append(
+                frm = float(filters[elem]["till"])
+
+            # Добавляем фильтрующую часть
+            result.append(
                 {
                     "type": "фильтрующая часть",
-                    "from": float(filter[elem]["from"]),
-                    "till": float(filter[elem]["till"]),
+                    "from": float(filters[elem]["from"]),
+                    "till": float(filters[elem]["till"]),
                 }
             )
-        # добавление отстояника
+
         if tll > frm:
-            res.append({"type": "отстойник", "from": frm, "till": tll})
-    return res
+            # Добавляем отстойник, если есть оставшаяся часть после фильтров
+            result.append(
+                {
+                    "type": "отстойник",
+                    "from": frm,
+                    "till": tll,
+                }
+            )
 
-
-# filter_sec(a)
+    return result
