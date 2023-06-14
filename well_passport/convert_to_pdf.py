@@ -53,6 +53,7 @@ def pdf_merge(pdf_list, output):
         sorted_pdf = dict(sorted(pdf_list.items(), key=lambda x: x[0]))
         pdf_merge(list(sorted_pdf.values()), output)
 
+
 # конвертируем гис в пдф
 def gis_to_pdf():
     # конвертируем первую часть
