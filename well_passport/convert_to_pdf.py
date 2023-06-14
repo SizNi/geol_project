@@ -2,9 +2,11 @@ from subprocess import Popen
 import img2pdf
 import os
 from PIL import Image
+from io import BytesIO
 from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
+from contextlib import ExitStack
 
 LIBRE_OFFICE = r"/usr/bin/libreoffice"
 
@@ -21,7 +23,7 @@ def doc_to_pdf(input_docx, out_folder):
             input_docx,
         ]
     )
-    print([LIBRE_OFFICE, "--convert-to", "pdf", input_docx])
+    # print([LIBRE_OFFICE, "--convert-to", "pdf", input_docx])
     p.communicate()
 
 
@@ -33,24 +35,27 @@ def img_to_pdf(output, input):
 
 
 def bmp_to_png(output, input):
-    img = Image.open(input)
-    img.save(output, "png")
+    with Image.open(input) as img:
+        img.save(output, "png")
 
 
 def pdf_merge(pdf_list, output):
     merger = PdfMerger()
-    if type(pdf_list) == list:
-        for elem in pdf_list:
-            merger.append(open(elem, "rb"))
-        with open(output, "wb") as result:
-            merger.write(result)
-    elif type(pdf_list) == dict:
+    if isinstance(pdf_list, list):
+        # открываем все файлы разом и передаем на объединение
+        with ExitStack() as stack:
+            files = [stack.enter_context(open(elem, "rb")) for elem in pdf_list]
+            for file in files:
+                merger.append(file)
+            with open(output, "wb") as result:
+                merger.write(result)
+    elif isinstance(pdf_list, dict):
         sorted_pdf = dict(sorted(pdf_list.items(), key=lambda x: x[0]))
         pdf_merge(list(sorted_pdf.values()), output)
 
-
 # конвертируем гис в пдф
 def gis_to_pdf():
+    # конвертируем первую часть
     if os.path.exists("well_passport/fixtures/gis.doc"):
         doc_to_pdf("well_passport/fixtures/gis.doc", "well_passport/fixtures")
     elif os.path.exists("well_passport/fixtures/gis.docx"):
@@ -59,6 +64,7 @@ def gis_to_pdf():
         img_to_pdf("well_passport/fixtures/gis.png", "well_passport/fixtures/gis.pdf")
     elif os.path.exists("well_passport/fixtures/gis.jpg"):
         img_to_pdf("well_passport/fixtures/gis.jpg", "well_passport/fixtures/gis.pdf")
+    # конвертируем вторую часть
     if os.path.exists("well_passport/fixtures/gis_2.doc"):
         doc_to_pdf("well_passport/fixtures/gis_2.doc", "well_passport/fixtures")
     elif os.path.exists("well_passport/fixtures/gis_2.docx"):
@@ -94,8 +100,9 @@ def gis_to_pdf():
 # блок добавления номеров страниц
 def create_page_pdf(num, tmp):
     c = canvas.Canvas(tmp)
+    # устанавливаем размер шрифта
+    c.setFontSize(10)
     for i in range(1, num + 1):
-        c.setFontSize(10)
         # координаты номера
         c.drawString((200) * mm, (290) * mm, str(i))
         c.showPage()
@@ -103,28 +110,23 @@ def create_page_pdf(num, tmp):
 
 
 def add_page_numbers(pdf_path, newpath):
-    tmp = "__tmp.pdf"
-
     writer = PdfWriter()
     with open(pdf_path, "rb") as f:
         reader = PdfReader(f)
         n = len(reader.pages)
 
-        # новый пдф с номерами
-        create_page_pdf(n, tmp)
+        # Создание временного PDF-файла в памяти
+        with BytesIO() as tmp:
+            create_page_pdf(n, tmp)
+            number_pdf = PdfReader(tmp)
 
-        with open(tmp, "rb") as ftmp:
-            number_pdf = PdfReader(ftmp)
-            for p in range(n):
-                page = reader.pages[p]
-                number_layer = number_pdf.pages[p]
+            for page, number_layer in zip(reader.pages, number_pdf.pages):
                 page.merge_page(number_layer)
                 writer.add_page(page)
 
             if len(writer.pages) > 0:
                 with open(newpath, "wb") as f:
                     writer.write(f)
-        os.remove(tmp)
 
 
 if __name__ == "__main__":
