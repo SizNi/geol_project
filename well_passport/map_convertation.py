@@ -7,11 +7,13 @@ from pyproj import Transformer
 def get_map(coordinates, path):
     width = 800
     height = 800
+    # Создаем контекст карты
     context = staticmaps.Context()
     context.set_tile_provider(staticmaps.tile_provider_OSM)
-
+    # Добавляем маркер на карту
     point = staticmaps.create_latlng(coordinates[0], coordinates[1])
     context.add_object(staticmaps.Marker(point, color=staticmaps.RED, size=8))
+    # Рендерим карту в Cairo-изображение
     img = context.render_cairo(width, height)
     img.write_to_png(path)
     img = Image.open(path)

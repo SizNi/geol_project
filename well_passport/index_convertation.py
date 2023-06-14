@@ -17,6 +17,5 @@ def convertation_doc(index):
                     text = f"{text[0:2]}₋₂{text[4:]}"
                 elif int(index[3]) == 3:
                     text = f"{text[0:2]}₋₃{text[4:]}"
-    text = text.replace("K1", "K₁")
-    text = text.replace("P1", "P₁")
+    text = text.replace("K1", "K₁").replace("P1", "P₁")
     return text
