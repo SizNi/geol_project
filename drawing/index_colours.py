@@ -44,8 +44,7 @@ colours = {
 
 # возврат заливки по индексу
 def colour(index):
-    if len(index) >= 2:
-        index = index[0:2]
+    index = index[:2]
     for elem in colours:
         if elem in index:
             return colours[elem]
@@ -56,21 +55,14 @@ def colour(index):
 def convertation(index):
     text = index
     if len(index) >= 2:
-        if index[1].isdigit():
-            if int(index[1]) == 1:
-                text = f"{index[0]}\u2081{index[2:]}"
-            elif int(index[1]) == 2:
-                text = f"{index[0]}\u2082{index[2:]}"
-            elif int(index[1]) == 3:
-                text = f"{index[0]}\u2083{index[2:]}"
-        if len(index) >= 4:
-            if index[3].isdigit():
-                if int(index[3]) == 1:
-                    text = f"{text[0:2]}\u208B\u2081{text[4:]}"
-                elif int(index[3]) == 2:
-                    text = f"{text[0:2]}\u208B\u2082{text[4:]}"
-                elif int(index[3]) == 3:
-                    text = f"{text[0:2]}\u208B\u2083{text[4:]}"
-    text = text.replace("K1", "K\u2081")
-    text = text.replace("P1", "P\u2081")
+        digit = int(index[1]) if index[1].isdigit() else None
+        if digit in range(1, 4):
+            unicode_digit = chr(8320 + digit)
+            text = f"{index[0]}{unicode_digit}{index[2:]}"
+        if len(index) >= 4 and index[3].isdigit():
+            digit = int(index[3])
+            if digit in range(1, 4):
+                unicode_digit = chr(8320 + digit)
+                text = f"{text[0:2]}\u208B{unicode_digit}{text[4:]}"
+    text = text.replace("K1", "K\u2081").replace("P1", "P\u2081")
     return text
