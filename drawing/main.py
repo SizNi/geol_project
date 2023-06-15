@@ -41,25 +41,17 @@ def main(well_dt, path):
 
 # выбор масштаба (размер секции и количество секций)
 def scaling(well_depth):
-    if well_depth <= 50:
-        section = 5
-    elif well_depth > 50 and well_depth <= 100:
-        section = 10
-    elif well_depth > 100 and well_depth <= 200:
-        section = 20
-    elif well_depth > 200 and well_depth <= 300:
-        section = 30
-    elif well_depth > 300 and well_depth <= 400:
-        section = 40
-    elif well_depth > 400 and well_depth <= 500:
-        section = 50
-    section_numbers = round((well_depth + (section / 2) - 0.1) / section)
-    return section, section_numbers
+    sections = {50: 5, 100: 10, 200: 20, 300: 30, 400: 40, 500: 50}
+
+    for depth, section in sections.items():
+        if well_depth <= depth:
+            section_numbers = round((well_depth + (section / 2) - 0.1) / section)
+            return section, section_numbers
+
+    raise ValueError("Глубина скважины превышает допустимую")
 
 
 # Создание таблицы с наименованием столбцов
-
-
 def header(d):
     # d x1, y1, x2, y2
     # создание заголовка таблицы (надо немного поправить перенос строк, для таблицы
@@ -75,7 +67,7 @@ def header(d):
     rectangle(d, 136, 297 - 25, 15, -15, "Мощность", "h")
     rectangle(d, 151, 297 - 15, 12, -25, "Уровень, м", "v")
     rectangle(d, 163, 297 - 15, 45, -10, "Конструкция скважины", "h")
-    rectangle(d, 163, 297 - 25, 22.5, -15, "Диаметр,         мм", "h")
+    rectangle(d, 163, 297 - 25, 22.5, -15, "Диаметр, мм", "h")
     rectangle(d, 185.5, 297 - 25, 22.5, -15, "Глубина, м", "h")
 
 
@@ -167,7 +159,8 @@ def rectangle(d, x, y, x1, y1, text, direction):
             stroke="white",
         )
         d.append(draw.Text([text], 40, path=p, text_anchor="middle"))
-
+    # по хорошему это можно было сделать с помощью textwrap, но по факту я написал аналог
+    # с добавлением знака переноса строки и без разрыва от запятых и точек
     elif direction == "h":
         number_str = math.ceil(abs((len(text) * 2.1) / x1))
         # коррекция размера текста (если строк много),

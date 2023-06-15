@@ -1,3 +1,3 @@
-digit = 2
-unicode_char = chr(int(f"832{digit}"))
-print(unicode_char)  # Выводит символ подстрочной двойки: ₂
+path = "well_passport/fixtures/logo.png"
+if path:
+    print(1)

@@ -4,7 +4,7 @@ import json
 from filter_section import filter_sec
 from index_convertation import convertation_doc
 from date_convertation import convertation_date
-from logo_convertation import convertation_logo
+from logo_convertation import convertation_logo, qr_creation
 from convert_to_pdf import (
     doc_to_pdf,
     img_to_pdf,
@@ -32,13 +32,16 @@ def filling_pass():
     with open("well_passport/fixtures/data.json") as json_file:
         data = json.load(json_file)
         context.update(data["main_data"])
-    # логотип (если его нет - создаем) и qr
-    if os.path.exists("well_passport/results/tmplogo.png") is False:
+    # логотип (если его нет - создаем)
+    if not os.path.exists("well_passport/results/tmplogo.png") and path:
         convertation_logo(path)
-    context["logo"] = InlineImage(
-        doc, "well_passport/results/tmplogo.png", height=Mm(18)
-    )
-    context["qr"] = InlineImage(doc, "well_passport/results/qr.png", height=Mm(20))
+        context["logo"] = InlineImage(
+            doc, "well_passport/results/tmplogo.png", height=Mm(18)
+        )
+    # создание и добавление qr-кода
+    if qr_data:
+        qr_creation(qr_data)
+        context["qr"] = InlineImage(doc, "well_passport/results/qr.png", height=Mm(20))
     # добавляем карту и получаем координаты в ГСК 2011 (конвертим из wgs 84)
     coordinates = [
         float(data["main_data"]["NL"]),
@@ -76,7 +79,8 @@ def filling_pass():
             context["filter_parts"] = filter_sec(columns[elem])
     context["obs"] = obs
     # добавляем цементацию
-    context["cementation"] = data["well_data"]["cementation"]
+    if "cementation" in data["well_data"]:
+        context["cementation"] = data["well_data"]["cementation"]
     context["year_now"] = datetime.now().year
     context["layers"] = list(data["layers"].values())
     # преобразование индексов в нижний регистр
@@ -148,9 +152,10 @@ def filling_pass():
         context["r1"] = False
     # словарь адресов приложений
     merge_dict = {}
-    # добавляем результаты ГИС если они есть
+    # номер приложения
     attouchment = 0
     pril = []
+    # добавляем результаты ГИС если они есть
     if "GIS" in data:
         context["gis_date"] = data["GIS"]["date"]
         context["gis_designer"] = data["GIS"]["designer"]
