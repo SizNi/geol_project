@@ -33,32 +33,24 @@ def speck(d, x, y, width, height, sediments, interlayers):
 
 # отдельно вынес выбор крапа
 def choose_speck(d, x, y, width, height, elem):
-    if "пески" in elem:
-        if len(elem) > 6:
-            type = elem[elem.find(" ") + 1 :]
-        else:
-            type = "средние"
-        sands(d, x, y, width, height, type)
-    elif elem == "глины":
-        clays(d, x, y, width, height)
-    elif elem == "известняки":
-        limestones(d, x, y, width, height)
-    elif elem == "суглинки":
-        loams(d, x, y, width, height)
-    elif elem == "мергели":
-        marls(d, x, y, width, height)
-    elif elem == "супеси":
-        sandy_loams(d, x, y, width, height)
-    elif elem == "песчаники":
-        sandstones(d, x, y, width, height)
-    elif elem == "доломиты":
-        dolomites(d, x, y, width, height)
-    elif elem == "мел":
-        chalk(d, x, y, width, height)
-    elif elem == "гнейсы":
-        gneisses(d, x, y, width, height)
-    elif elem == "граниты":
-        granites(d, x, y, width, height)
+    speck_functions = {
+        "пески": sands,
+        "глины": clays,
+        "известняки": limestones,
+        "суглинки": loams,
+        "мергели": marls,
+        "супеси": sandy_loams,
+        "песчаники": sandstones,
+        "доломиты": dolomites,
+        "мел": chalk,
+        "гнейсы": gneisses,
+        "граниты": granites,
+    }
+    if elem.startswith("пески"):
+        speck_type = elem.split(" ")[-1] if len(elem) > 6 else "средние"
+        speck_functions["пески"](d, x, y, width, height, speck_type)
+    elif elem in speck_functions:
+        speck_functions[elem](d, x, y, width, height)
     else:
         raise ValueError("Что-то пошло не так. Возможно таких отложений нет")
 

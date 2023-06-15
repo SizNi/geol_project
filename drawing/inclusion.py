@@ -13,7 +13,7 @@ def inclus(d, x, y, width, height, inclusions):
         "галька": pebbles,
         "щебень": gravels,
         "гравий": grits,
-        "фосфориты": phosphorites
+        "фосфориты": phosphorites,
     }
 
     for elem in inclusions:
@@ -25,20 +25,23 @@ def inclus(d, x, y, width, height, inclusions):
 def clump(x_start, y_start, size):
     size = size * koef
     coordinates = [
-        x_start, y_start,
-        x_start + 2.5 * size, y_start + 5.5 * size,
-        x_start + 10.0 * size, y_start + 5.5 * size,
-        x_start + 13.3 * size, y_start + 0.0 * size,
-        x_start + 10.6 * size, y_start - 5.6 * size,
-        x_start + 4.6 * size, y_start - 4.1 * size,
-        x_start, y_start
+        x_start,
+        y_start,
+        x_start + 2.5 * size,
+        y_start + 5.5 * size,
+        x_start + 10.0 * size,
+        y_start + 5.5 * size,
+        x_start + 13.3 * size,
+        y_start + 0.0 * size,
+        x_start + 10.6 * size,
+        y_start - 5.6 * size,
+        x_start + 4.6 * size,
+        y_start - 4.1 * size,
+        x_start,
+        y_start,
     ]
     c = draw.Lines(
-        *coordinates,
-        close=True,
-        fill="none",
-        stroke="#ababab",
-        stroke_width=3
+        *coordinates, close=True, fill="none", stroke="#ababab", stroke_width=3
     )
     return c
 
