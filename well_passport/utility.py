@@ -4,7 +4,7 @@ import os
 def removing():
     os.remove("well_passport/results/tmplogo.png")
     os.remove("well_passport/results/qr.png")
-    os.remove("well_passport/results/generated_cross.png")
+    # os.remove("well_passport/results/generated_cross.png")
     os.remove("well_passport/results/generated_cross.pdf")
     os.remove("well_passport/results/generated_doc.docx")
     os.remove("well_passport/results/generated_doc.pdf")

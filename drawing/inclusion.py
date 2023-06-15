@@ -7,43 +7,38 @@ _, _, koef = frmt("a4")
 
 
 def inclus(d, x, y, width, height, inclusions):
+    inclusion_functions = {
+        "глыбы": clumps,
+        "валуны": boulders,
+        "галька": pebbles,
+        "щебень": gravels,
+        "гравий": grits,
+        "фосфориты": phosphorites
+    }
+
     for elem in inclusions:
-        if elem == "глыбы":
-            clumps(d, x, y, width, height)
-        if elem == "валуны":
-            boulders(d, x, y, width, height)
-        if elem == "галька":
-            pebbles(d, x, y, width, height)
-        if elem == "щебень":
-            gravels(d, x, y, width, height)
-        if elem == "гравий":
-            grits(d, x, y, width, height)
-        if elem == "фосфориты":
-            phosphorites(d, x, y, width, height)
+        if elem in inclusion_functions:
+            inclusion_functions[elem](d, x, y, width, height)
 
 
 # единичная глыба
 def clump(x_start, y_start, size):
     size = size * koef
+    coordinates = [
+        x_start, y_start,
+        x_start + 2.5 * size, y_start + 5.5 * size,
+        x_start + 10.0 * size, y_start + 5.5 * size,
+        x_start + 13.3 * size, y_start + 0.0 * size,
+        x_start + 10.6 * size, y_start - 5.6 * size,
+        x_start + 4.6 * size, y_start - 4.1 * size,
+        x_start, y_start
+    ]
     c = draw.Lines(
-        x_start,
-        y_start,
-        x_start + 2.5 * size,
-        y_start + 5.5 * size,
-        x_start + 10.0 * size,
-        y_start + 5.5 * size,
-        x_start + 13.3 * size,
-        y_start + 0.0 * size,
-        x_start + 10.6 * size,
-        y_start - 5.6 * size,
-        x_start + 4.6 * size,
-        y_start - 4.1 * size,
-        x_start,
-        y_start,
+        *coordinates,
         close=True,
         fill="none",
         stroke="#ababab",
-        stroke_width=3,
+        stroke_width=3
     )
     return c
 
@@ -156,36 +151,21 @@ def pebbles(d, x, y, width, height):
 # единичный щебень
 def gravel(x_start, y_start, size, i):
     size = size * koef
-    if i % 2 == 1:
-        c = draw.Lines(
-            x_start,
-            y_start,
-            x_start + 15 * size,
-            y_start + 0 * size,
-            x_start + 7.5 * size,
-            y_start - 15 * size,
-            x_start,
-            y_start,
-            close=True,
-            fill="none",
-            stroke="#ababab",
-            stroke_width=3,
-        )
-    else:
-        c = draw.Lines(
-            x_start,
-            y_start,
-            x_start + 15 * size,
-            y_start + 0 * size,
-            x_start + 7.5 * size,
-            y_start + 15 * size,
-            x_start,
-            y_start,
-            close=True,
-            fill="none",
-            stroke="#ababab",
-            stroke_width=3,
-        )
+    dy = -15 * size if i % 2 == 1 else 15 * size
+    c = draw.Lines(
+        x_start,
+        y_start,
+        x_start + 15 * size,
+        y_start + 0 * size,
+        x_start + 7.5 * size,
+        y_start + dy,
+        x_start,
+        y_start,
+        close=True,
+        fill="none",
+        stroke="#ababab",
+        stroke_width=3,
+    )
     return c
 
 
