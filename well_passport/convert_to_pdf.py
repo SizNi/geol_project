@@ -7,6 +7,8 @@ from PyPDF2 import PdfMerger, PdfReader, PdfWriter
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas
 from contextlib import ExitStack
+import shutil
+
 
 LIBRE_OFFICE = r"/usr/bin/libreoffice"
 
@@ -96,6 +98,10 @@ def gis_to_pdf():
         pdf_merge(pdf_list, "well_passport/results/gis.pdf")
         os.remove("well_passport/fixtures/gis_2.pdf")
         os.remove("well_passport/fixtures/gis.pdf")
+    elif os.path.exists("well_passport/fixtures/gis.pdf") and not os.path.exists(
+        "well_passport/fixtures/gis_2.pdf"):
+        shutil.copy2("well_passport/fixtures/gis.pdf", "well_passport/results/gis.pdf")
+        
 
 
 # блок добавления номеров страниц

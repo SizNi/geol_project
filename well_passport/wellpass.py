@@ -93,10 +93,10 @@ def filling_pass():
             # добавляем отложения основного горизонта
             # print(elem["sediments"])
             context["main_aquifer_sediments"] = ", ".join(map(str, elem["sediments"]))
-            context["ma_from"] = elem_depth
-            context["ma_till"] = elem_depth + elem["thick"]
+            context["ma_from"] = round(elem_depth, 1)
+            context["ma_till"] = round((elem_depth + elem["thick"]), 1)
         # получаем кровлю следующего горизонта
-        elem_depth += elem["thick"]
+        elem_depth += round(elem["thick"], 1)
     # преобразует все компоненты отложений в единую строку (отложения, прослои, вкрапления)
     # добавляем отложения
     bedding_depth = 0.0
@@ -116,8 +116,8 @@ def filling_pass():
         # преобразование мощности отложений во флоат
         data["layers"][elem]["thick"] = float(data["layers"][elem]["thick"])
         # добавление подошвы пласта
-        bedding_depth += data["layers"][elem]["thick"]
-        data["layers"][elem]["bedding_depth"] = bedding_depth
+        bedding_depth += round(data["layers"][elem]["thick"], 1)
+        data["layers"][elem]["bedding_depth"] = round(bedding_depth, 1)
     context["well_depth"] = data["well_data"]["well_depth"]
     # добавление фильтровых интервалов в таблицу
     # по хорошоему надо будет переделать вместе с исходным форматом,
@@ -133,12 +133,15 @@ def filling_pass():
     context["static_lvl"] = data["well_data"]["static_lvl"]
     context["static_lvl"] = data["well_data"]["static_lvl"]
     context["debit"] = data["well_data"]["debit"]
-    context["ud_debit"] = round(
-        data["well_data"]["debit"]
-        * 0.278
-        / (data["well_data"]["dynamic_lvl"] - data["well_data"]["static_lvl"]),
-        2,
-    )
+    if data["well_data"]["dynamic_lvl"] != data["well_data"]["static_lvl"]:
+        context["ud_debit"] = round(
+            data["well_data"]["debit"]
+            * 0.278
+            / (data["well_data"]["dynamic_lvl"] - data["well_data"]["static_lvl"]),
+            2,
+        )
+    else:
+        context["ud_debit"] = round(data["well_data"]["debit"] * 0.278, 2)
     context["lowering"] = round(
         data["well_data"]["dynamic_lvl"] - data["well_data"]["static_lvl"], 2
     )
@@ -179,11 +182,14 @@ def filling_pass():
             data["well_data"]["debit"] * 24,
             1,
         )
-        context["debit_3"] = round(
-            data["well_data"]["debit"]
-            / (data["well_data"]["dynamic_lvl"] - data["well_data"]["static_lvl"]),
-            2,
-        )
+        if data["well_data"]["dynamic_lvl"] != data["well_data"]["static_lvl"]:
+            context["debit_3"] = round(
+                data["well_data"]["debit"]
+                / (data["well_data"]["dynamic_lvl"] - data["well_data"]["static_lvl"]),
+                2,
+            )
+        else:
+            context["debit_3"] = round(data["well_data"]["debit"], 2)
         context["debit_4"] = context["debit_3"] * 24
         context["ofr_reservoir"] = data["OFR"]["reservoir"]
         context["fill_time"] = round(data["OFR"]["reservoir"] / context["debit_1"], 1)
@@ -221,6 +227,7 @@ def filling_pass():
     merge_dict[1] = "well_passport/results/generated_doc.pdf"
     # чекаем наличие дополнительных приложений. Если есть - добавляем их
     if data["additional_attouchments"]:
+        attouchment += 1
         for elem in data["additional_attouchments"]:
             merge_dict[attouchment + 1] = elem["way"]
             pril.append({"id": attouchment, "name": elem["name"]})
@@ -228,6 +235,7 @@ def filling_pass():
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
     # конвертируем в пдф (файл, папка с результатом)
+    print(merge_dict)
     doc_to_pdf("well_passport/results/generated_doc.docx", "well_passport/results")
     pdf_merge(merge_dict, "well_passport/results/result_without_pages.pdf")
     # добавляем номера страниц
