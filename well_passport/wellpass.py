@@ -89,7 +89,6 @@ def filling_pass():
             for elem_0 in elem:
                 new_filter_results.append(elem_0)
     context["filter_parts"] = new_filter_results
-    # print(context["filter"])
     context["obs"] = obs
     # добавляем цементацию
     if "cementation" in data["well_data"]:
@@ -138,22 +137,16 @@ def filling_pass():
     dt = []
     # перебор если фильтровых колонн несколько
     for elem in context["filter"]:
-        # print(elem)
         dt.append(elem["filter"])
-    print(context['filter'])
     filter_length = 0
     elem_list = []
     for elem in dt:
         # elem_list нужен для нескольких фильтровых колонн, где пересекаются номера фильтровых частей
         elem_list = list(elem.values())
-        for elem_0 in elem:
-            obs.append(elem[elem_0])
         filter_length += elem_list[0]["till"] - elem_list[0]["from"]
-        # print(filter_length)
-    # print(obs)
     context["filter_length"] = filter_length
-    context["filter_type_data"] = context['filter'][0]
-    context["filter_table"] = context['filter']
+    context["filter_type_data"] = context["filter"][0]
+    context["filter_table"] = context["filter"]
     context["static_lvl"] = data["well_data"]["static_lvl"]
     context["static_lvl"] = data["well_data"]["static_lvl"]
     context["debit"] = data["well_data"]["debit"]
@@ -256,13 +249,10 @@ def filling_pass():
             merge_dict[attouchment + 1] = elem["way"]
             pril.append({"id": attouchment, "name": elem["name"]})
             attouchment += 1
-    # print(context)
     doc.render(context)
     doc.save("well_passport/results/generated_doc.docx")
     # конвертируем в пдф (файл, папка с результатом)
-    # print(merge_dict)
     doc_to_pdf("well_passport/results/generated_doc.docx", "well_passport/results")
-    # print(merge_dict)
     pdf_merge(merge_dict, "well_passport/results/result_without_pages.pdf")
     # добавляем номера страниц
     add_page_numbers(
