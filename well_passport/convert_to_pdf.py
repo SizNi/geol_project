@@ -25,7 +25,6 @@ def doc_to_pdf(input_docx, out_folder):
             input_docx,
         ]
     )
-    # print([LIBRE_OFFICE, "--convert-to", "pdf", input_docx])
     p.communicate()
 
 

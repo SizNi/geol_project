@@ -4,6 +4,7 @@
 def filter_sec(data):
     filters = data["filter"]
     result = []
+    # print(data)
 
     if data["type"] == "О.С.":
         # Для типа "О.С." добавляем только одну часть - открытый ствол
@@ -49,5 +50,4 @@ def filter_sec(data):
                     "till": tll,
                 }
             )
-
     return result

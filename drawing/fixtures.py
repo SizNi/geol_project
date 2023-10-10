@@ -1,4 +1,46 @@
 # входной формат данных
+well_data_0 = {
+    "well_data": {
+        "columns": {
+            1: {"id": 1, "D": 1, "from": 1.0, "till": 1.0, "type": "обсадная"},
+            2: {"id": 2, "D": 2, "from": 2.0, "till": 2.0, "type": "обсадная"},
+            3: {
+                "id": 3,
+                "D": 3,
+                "from": 3.0,
+                "till": 3.0,
+                "type": "фильтровая",
+                "filter": {
+                    1: {"id": 1, "from": "3", "till": "3"},
+                    2: {"id": 2, "from": "4", "till": "4"},
+                },
+            },
+        },
+        "pump_type": "5",
+        "pump_depth": 5.0,
+        "static_lvl": 5.0,
+        "dynamic_lvl": 5.0,
+        "well_depth": 1.0,
+    },
+    "layers": {
+        1: {
+            "id": 1,
+            "name": "6",
+            "thick": 0.0,
+            "sediments": ("пески мелкие",),
+            "interlayers": ("пески мелкие",),
+            "inclusions": ("глыбы",),
+        },
+        2: {
+            "id": 2,
+            "name": "7",
+            "thick": 0.0,
+            "sediments": ("глины",),
+            "interlayers": ("мел",),
+            "inclusions": ("фосфориты(в подошве слоя)",),
+        },
+    },
+}
 well_data_1 = {
     # данные по слоям
     "layers": {
